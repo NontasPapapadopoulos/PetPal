@@ -47,6 +47,12 @@ before choosing a new one.</string>
     <string name="microchip">Microchip number (optional)</string>
     <string name="vet_clinic">Vet / clinic (optional)</string>
     <string name="sex">Sex</string>
-
-
+    <string name="add_medicine">Add medicine</string>
+    <string name="edit_pet">Edit Pet</string>
+    <string name="all">All</string>
+    <string name="vaccines">Vaccines</string>
+    <string name="pills">Pills</string>
+    <string name="treatments">Treatments</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="history">History</string>
 </resources>
