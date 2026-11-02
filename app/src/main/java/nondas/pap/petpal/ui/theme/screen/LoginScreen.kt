@@ -1,8 +1,10 @@
 package nondas.pap.petpal.ui.theme.screen
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,6 +18,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Pets
 import androidx.compose.material.icons.outlined.Pets
 import androidx.compose.material3.Button
@@ -38,6 +41,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import nondas.pap.petpal.BackButton
 import nondas.pap.petpal.R
 import nondas.pap.petpal.ui.theme.PetPalShapes
 import nondas.pap.petpal.ui.theme.PetPalTheme
@@ -91,38 +95,41 @@ private fun LoginContent() {
 
         Spacer(modifier = Modifier.height(24.dp))
 
+        Text(
+            text = stringResource(R.string.email),
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Start
+        )
+
+        Spacer(modifier = Modifier.height(4.dp))
+
 
         OutlinedTextField(
             value = "",
             onValueChange = {},
             modifier = Modifier.fillMaxWidth(),
-            label = {
-                Text(
-                    text = stringResource(R.string.email)
-                )
-            },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email
             )
-
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Text(
+            text = stringResource(R.string.password),
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Start
+        )
+
+        Spacer(modifier = Modifier.height(4.dp))
 
         OutlinedTextField(
             value = "",
             onValueChange = {},
             modifier = Modifier.fillMaxWidth(),
-            label = {
-                Text(
-                    text = stringResource(R.string.password)
-                )
-            },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password
             ),
-
-
         )
 
         Row(
@@ -195,12 +202,23 @@ private fun LoginContent() {
 
         ) {
 
-//            Icon(
-//                painter = painterResource(id = R.drawable.ic_google_icon),
-//                contentDescription = "Google icon"
-//            )
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.border(
+                    border = BorderStroke(
+                        2.dp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    ),
+                    shape = CircleShape
+                )
+                    .size(24.dp)
+            ) {
+                Text(
+                    text = "G",
+                )
+            }
 
-            Spacer(modifier = Modifier.width(4.dp))
+            Spacer(modifier = Modifier.width(8.dp))
 
             Text(
                 text = stringResource(R.string.google_sign_in),
@@ -247,7 +265,10 @@ private fun LoginContent() {
 @Composable
 @Preview
 private fun LoginContentPreview() {
-    PetPalTheme {
+    PetPalTheme(
+        darkTheme = false,
+        dynamicColor = false
+    ) {
         LoginContent()
     }
 }

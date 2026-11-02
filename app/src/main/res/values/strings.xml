@@ -5,9 +5,48 @@
     <string name="sign_in">Sign in</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="confirm_password">Confirm password</string>
     <string name="forgot_password">Forgot password</string>
     <string name="or">or</string>
     <string name="google_sign_in">Continue with Google</string>
+    <string name="sign_up_google">Sign up with Google</string>
     <string name="new_to_petpal">New to PetPal?</string>
     <string name="create_account">Create an account</string>
+    <string name="create_your_account">Create your account</string>
+    <string name="already_have_account">Already have account?</string>
+    <string name="create_account_subtitle">One place for every vaccine, pill and vet visit.</string>
+    <string name="forgot_your_password">Forgot your password?</string>
+    <string name="forgot_your_password_subtitle">Enter the email you signed up with and we’ll send
+you a link to reset it.</string>
+    <string name="send_reset_link">Send reset link</string>
+    <string name="change_password">Change password</string>
+    <string name="change_password_subtitle">For your security, confirm your current password
+before choosing a new one.</string>
+    <string name="new_password">New password</string>
+    <string name="current_password">Current password</string>
+    <string name="confirm_new_password">Confirm new password</string>
+    <string name="update_password">Update password</string>
+    <string name="password_needs">Your password needs</string>
+    <string name="at_least_eight">At least 8 characters</string>
+    <string name="one_number">One number</string>
+    <string name="different_from_current">Different from your current one</string>
+    <string name="add_pet">Add a pet</string>
+    <string name="add_photo">Add a photo</string>
+    <string name="name">Name</string>
+    <string name="species">Species</string>
+    <string name="dog">Dog</string>
+    <string name="cat">Cat</string>
+    <string name="bird">Bird</string>
+    <string name="other">Other</string>
+    <string name="breed">Breed</string>
+    <string name="birth_date">Birth date</string>
+    <string name="weight">Weight (kg)</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="save_pet">Save pet</string>
+    <string name="microchip">Microchip number (optional)</string>
+    <string name="vet_clinic">Vet / clinic (optional)</string>
+    <string name="sex">Sex</string>
+
+
 </resources>
