@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Vaccines
 import androidx.compose.material.icons.outlined.Shield
 import androidx.compose.material.icons.outlined.Vaccines
 import androidx.compose.material3.Button
@@ -32,14 +31,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import nondas.pap.petpal.BackButton
 import nondas.pap.petpal.R
+import nondas.pap.petpal.ui.composable.ChoiceItem
+import nondas.pap.petpal.ui.composable.SelectionRow
 import nondas.pap.petpal.ui.theme.PetPalShapes
 import nondas.pap.petpal.ui.theme.PetPalTheme
 
@@ -123,7 +122,10 @@ private fun PetContent() {
                 )
             }
 
-            SelectionRow()
+            SelectionRow(
+                firstSelectionText = stringResource(R.string.male),
+                secondSelectionText = stringResource(R.string.female),
+            )
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -140,24 +142,24 @@ private fun PetContent() {
             ) {
 
                 FlowRow {
-                    FilterItem(
-                        filter = "All",
+                    ChoiceItem(
+                        choice = "All",
                         isSelected = true
                     )
 
-                    FilterItem(
-                        filter = "Vaccines",
+                    ChoiceItem(
+                        choice = "Vaccines",
                         isSelected = false
                     )
 
 
-                    FilterItem(
-                        filter = "Pills",
+                    ChoiceItem(
+                        choice = "Pills",
                         isSelected = false
                     )
 
-                    FilterItem(
-                        filter = "Treatments",
+                    ChoiceItem(
+                        choice = "Treatments",
                         isSelected = false
                     )
 
@@ -216,8 +218,6 @@ private fun PetContent() {
 }
 
 
-
-
 @Composable
 private fun PetDetails(
     name: String,
@@ -256,85 +256,6 @@ private fun PetDetails(
     }
 }
 
-@Composable
-private fun SelectionRow() {
-
-
-    Row(
-        modifier = Modifier.fillMaxWidth()
-            .padding(horizontal = 24.dp)
-            .height(52.dp)
-            .background(
-                color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                shape = PetPalShapes.medium
-            )
-            .padding(horizontal = 4.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-
-        SelectionItem(
-            selection = "Upcoming", //stringResource(R.string.female),
-            isSelected = false,
-            modifier = Modifier.weight(1f)
-        )
-
-        SelectionItem(
-            selection = "History", //stringResource(R.string.female),
-            isSelected = true,
-            modifier = Modifier.weight(1f)
-        )
-
-    }
-}
-
-
-@Composable
-private fun SelectionItem(
-    selection: String,
-    isSelected: Boolean,
-    modifier: Modifier = Modifier
-) {
-
-    val color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
-    val backgroundColor = if (isSelected) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.surfaceVariant
-
-
-    Text(
-        text = selection,
-        color = color,
-        style = MaterialTheme.typography.labelMedium,
-        textAlign = TextAlign.Center,
-        modifier = modifier
-            .background(
-                color = backgroundColor,
-                shape = PetPalShapes.small
-            )
-            .padding(vertical = 14.dp)
-
-    )
-}
-
-
-
-@Composable
-private fun FilterItem(
-    filter: String,
-    isSelected: Boolean,
-    modifier: Modifier = Modifier
-) {
-    val color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground
-    val backgroundColor = if (!isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground
-    val borderColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
-    Text(
-        text = filter,
-        color = color,
-        modifier = modifier
-            .padding(horizontal = 2.dp, vertical = 4.dp)
-            .background(color = backgroundColor, shape = PetPalShapes.large)
-            .border(width = if (isSelected) 0.dp else 1.dp, color = borderColor, shape = PetPalShapes.large)
-            .padding(vertical = 8.dp, horizontal = 12.dp)
-    )
-}
 
 
 @Composable

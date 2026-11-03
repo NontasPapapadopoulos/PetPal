@@ -18,6 +18,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -43,88 +44,92 @@ fun ForgotPasswordScreen() {
 @Composable
 private fun ForgotPasswordContent() {
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp)
-    ) {
+    Scaffold {
+        Column(
+            modifier = Modifier
+                .padding(it)
+                .fillMaxSize()
+                .padding(24.dp)
+        ) {
 
-        BackButton(onClick = {})
+            BackButton(onClick = {})
 
-        Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
 
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier.size(88.dp)
-                .background(
-                    color = MaterialTheme.colorScheme.primaryContainer,
-                    shape = PetPalShapes.large
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.size(88.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.primaryContainer,
+                        shape = PetPalShapes.large
+                    )
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Lock,
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    contentDescription = null,
+                    modifier = Modifier.size(40.dp)
+
                 )
-        ) {
-            Icon(
-                imageVector = Icons.Outlined.Lock,
-                tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                contentDescription = null,
-                modifier = Modifier.size(40.dp)
-
-            )
-        }
+            }
 
 
-        Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
 
-        Text(
-            text = stringResource(R.string.forgot_your_password),
-            style = MaterialTheme.typography.headlineMedium
-        )
-
-        Spacer(modifier = Modifier.height(4.dp))
-
-
-        Text(
-            text = stringResource(R.string.forgot_your_password_subtitle),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-
-        Text(
-            text = stringResource(R.string.email),
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Start
-        )
-
-        Spacer(modifier = Modifier.height(4.dp))
-
-
-        OutlinedTextField(
-            value = "",
-            onValueChange = {},
-            modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Email
-            )
-        )
-
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-
-        Button(
-            onClick = {},
-            modifier = Modifier.fillMaxWidth()
-                .height(height = 54.dp),
-            shape = PetPalShapes.medium
-        ) {
             Text(
-                text = stringResource(R.string.send_reset_link)
+                text = stringResource(R.string.forgot_your_password),
+                style = MaterialTheme.typography.headlineMedium
             )
-        }
 
+            Spacer(modifier = Modifier.height(4.dp))
+
+
+            Text(
+                text = stringResource(R.string.forgot_your_password_subtitle),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+
+            Text(
+                text = stringResource(R.string.email),
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Start
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+
+            OutlinedTextField(
+                value = "",
+                onValueChange = {},
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email
+                )
+            )
+
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+
+            Button(
+                onClick = {},
+                modifier = Modifier.fillMaxWidth()
+                    .height(height = 54.dp),
+                shape = PetPalShapes.medium
+            ) {
+                Text(
+                    text = stringResource(R.string.send_reset_link)
+                )
+            }
+
+
+        }
 
     }
 

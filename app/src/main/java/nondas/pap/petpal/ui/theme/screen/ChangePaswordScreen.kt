@@ -27,6 +27,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -53,142 +54,146 @@ fun ChangePasswordScreen() {
 @Composable
 private fun ChangePasswordScreenContent() {
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp)
-    ) {
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically
+    Scaffold {
+        Column(
+            modifier = Modifier
+                .padding(it)
+                .fillMaxSize()
+                .padding(24.dp)
         ) {
 
-            BackButton(onClick = {})
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
 
-            Spacer(modifier = Modifier.width(16.dp))
+                BackButton(onClick = {})
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Text(
+                    text = stringResource(R.string.change_password),
+                    style = MaterialTheme.typography.headlineMedium
+                )
+
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
 
             Text(
-                text = stringResource(R.string.change_password),
-                style = MaterialTheme.typography.headlineMedium
+                text = stringResource(R.string.change_password_subtitle),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
 
-        Text(
-            text = stringResource(R.string.change_password_subtitle),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-
-        Text(
-            text = stringResource(R.string.current_password),
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Start
-        )
-
-        Spacer(modifier = Modifier.height(4.dp))
-
-
-        OutlinedTextField(
-            value = "",
-            onValueChange = {},
-            modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Password
-            )
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-
-        HorizontalDivider()
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = stringResource(R.string.new_password),
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Start
-        )
-
-        Spacer(modifier = Modifier.height(4.dp))
-
-        OutlinedTextField(
-            value = "",
-            onValueChange = {},
-            modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Password
-            ),
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-
-        Text(
-            text = stringResource(R.string.confirm_new_password),
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Start
-        )
-
-        Spacer(modifier = Modifier.height(4.dp))
-
-        OutlinedTextField(
-            value = "",
-            onValueChange = {},
-            modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Password
-            ),
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-
-        Card(
-            modifier = Modifier.fillMaxWidth()
-        ) {
             Text(
-                text = stringResource(R.string.password_needs),
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                text = stringResource(R.string.current_password),
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Start
             )
 
-            PasswordRule(
-                text = stringResource(R.string.at_least_eight),
-                isSatisfied = true
+            Spacer(modifier = Modifier.height(4.dp))
+
+
+            OutlinedTextField(
+                value = "",
+                onValueChange = {},
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password
+                )
             )
 
-            PasswordRule(
-                text = stringResource(R.string.one_number),
-                isSatisfied = false
-            )
-
-            PasswordRule(
-                text = stringResource(R.string.different_from_current),
-                isSatisfied = false
-            )
-
-        }
+            Spacer(modifier = Modifier.height(24.dp))
 
 
-        Spacer(modifier = Modifier.weight(1f))
+            HorizontalDivider()
 
+            Spacer(modifier = Modifier.height(16.dp))
 
-        Button(
-            onClick = {},
-            modifier = Modifier.fillMaxWidth()
-                .height(height = 54.dp),
-            shape = PetPalShapes.medium
-        ) {
             Text(
-                text = stringResource(R.string.update_password)
+                text = stringResource(R.string.new_password),
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Start
             )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            OutlinedTextField(
+                value = "",
+                onValueChange = {},
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password
+                ),
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+
+            Text(
+                text = stringResource(R.string.confirm_new_password),
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Start
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            OutlinedTextField(
+                value = "",
+                onValueChange = {},
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password
+                ),
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+
+            Card(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = stringResource(R.string.password_needs),
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                )
+
+                PasswordRule(
+                    text = stringResource(R.string.at_least_eight),
+                    isSatisfied = true
+                )
+
+                PasswordRule(
+                    text = stringResource(R.string.one_number),
+                    isSatisfied = false
+                )
+
+                PasswordRule(
+                    text = stringResource(R.string.different_from_current),
+                    isSatisfied = false
+                )
+
+            }
+
+
+            Spacer(modifier = Modifier.weight(1f))
+
+
+            Button(
+                onClick = {},
+                modifier = Modifier.fillMaxWidth()
+                    .height(height = 54.dp),
+                shape = PetPalShapes.medium
+            ) {
+                Text(
+                    text = stringResource(R.string.update_password)
+                )
+            }
+
         }
 
     }

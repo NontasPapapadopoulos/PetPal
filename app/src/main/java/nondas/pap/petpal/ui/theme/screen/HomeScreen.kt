@@ -21,6 +21,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -42,88 +43,92 @@ private fun HomeScreen() {
 @Composable
 private fun HomeContent() {
 
-    Column(
-        modifier = Modifier.fillMaxSize()
-            .padding(24.dp)
-            .verticalScroll(rememberScrollState())
-    ) {
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+    Scaffold {
+        Column(
+            modifier = Modifier.fillMaxSize()
+                .padding(it)
+                .padding(24.dp)
+                .verticalScroll(rememberScrollState())
         ) {
 
-            Column {
-                Text(
-                    text = "Monday, 2 November",
-                )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
 
-                Text(
-                    text = "Hi, Nondas",
-                    style = MaterialTheme.typography.headlineMedium
-                )
+                Column {
+                    Text(
+                        text = "Monday, 2 November",
+                    )
+
+                    Text(
+                        text = "Hi, Nondas",
+                        style = MaterialTheme.typography.headlineMedium
+                    )
+                }
+
+                OutlinedButton(
+                    onClick = {},
+
+                    shape = RoundedCornerShape(24.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Notifications,
+                        contentDescription = null,
+                        modifier = Modifier.padding(vertical = 16.dp)
+                    )
+                }
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+
+            PetItem(
+                name = "Roza",
+                specie = "Dog",
+                breed = "Frenchton",
+                age = "6"
+            )
+
+
+            PetItem(
+                name = "Pepe",
+                specie = "Dog",
+                breed = "Yorkshire",
+                age = "6"
+            )
+
+
+            PetItem(
+                name = "Luna",
+                specie = "Dog",
+                breed = "Golden",
+                age = "6"
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
 
             OutlinedButton(
                 onClick = {},
-
-                shape = RoundedCornerShape(24.dp)
+                modifier = Modifier.fillMaxWidth()
+                    .height(64.dp),
+                shape = PetPalShapes.large,
             ) {
+
                 Icon(
-                    imageVector = Icons.Outlined.Notifications,
+                    imageVector = Icons.Default.Add,
                     contentDescription = null,
-                    modifier = Modifier.padding(vertical = 16.dp)
+                    tint = MaterialTheme.colorScheme.primary
+                )
+
+                Text(
+                    text = stringResource(R.string.add_pet),
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
-        }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-
-        PetItem(
-            name = "Roza",
-            specie = "Dog",
-            breed = "Frenchton",
-            age = "6"
-        )
-
-
-        PetItem(
-            name = "Pepe",
-            specie = "Dog",
-            breed = "Yorkshire",
-            age = "6"
-        )
-
-
-        PetItem(
-            name = "Luna",
-            specie = "Dog",
-            breed = "Golden",
-            age = "6"
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-
-        OutlinedButton(
-            onClick = {},
-            modifier = Modifier.fillMaxWidth()
-                .height(64.dp),
-            shape = PetPalShapes.large,
-        ) {
-
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary
-            )
-
-            Text(
-                text = stringResource(R.string.add_pet),
-                color = MaterialTheme.colorScheme.primary
-            )
         }
 
     }
