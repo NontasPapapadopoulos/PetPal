@@ -22,13 +22,20 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.flow.collectLatest
 import nondas.pap.petpal.R
+import nondas.pap.petpal.presentation.LoginViewModel
 import nondas.pap.petpal.ui.composable.Field
 import nondas.pap.petpal.ui.composable.FieldLabel
 import nondas.pap.petpal.ui.composable.GoogleIcon
@@ -38,20 +45,44 @@ import nondas.pap.petpal.ui.theme.PetPalTheme
 
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    navigateToHome: () -> Unit,
+    navigateToForgotPassword: () -> Unit,
+    navigateToCreateAccount: () -> Unit,
+    viewModel: LoginViewModel
+) {
 
+    LaunchedEffect(Unit) {
+        viewModel.navigationFlow.collectLatest {
+            navigateToHome()
+        }
+    }
+
+
+    LoginContent(
+        onLogin = { email, password -> viewModel.onLogin(email, password) },
+        onForgotPasswordClicked = navigateToForgotPassword,
+        onCreateAccountClicked = navigateToCreateAccount
+    )
 }
 
 
 @Composable
-private fun LoginContent() {
+private fun LoginContent(
+    onLogin: (email: String, password: String) -> Unit,
+    onForgotPasswordClicked: () -> Unit,
+    onCreateAccountClicked: () -> Unit,
+) {
     Scaffold {
         Column(
             modifier = Modifier.fillMaxSize()
                 .padding(it)
                 .padding(horizontal = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+
+            var email by rememberSaveable { mutableStateOf("") }
+            var password by rememberSaveable { mutableStateOf("") }
 
             Spacer(modifier = Modifier.height(56.dp))
 
@@ -65,7 +96,7 @@ private fun LoginContent() {
                         shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp, bottomEnd = 28.dp, bottomStart = 8.dp)
                     )
                     .padding(24.dp)
-                    .size(52.dp)
+                    .size(48.dp)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -93,8 +124,8 @@ private fun LoginContent() {
             )
 
             Field(
-                value = "",
-                onValueChange = {},
+                value = email,
+                onValueChange = { email = it },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email
                 ),
@@ -107,8 +138,8 @@ private fun LoginContent() {
             )
 
             Field(
-                value = "",
-                onValueChange = {},
+                value = password,
+                onValueChange = { password = it },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password
                 ),
@@ -119,7 +150,7 @@ private fun LoginContent() {
                 horizontalArrangement = Arrangement.End
             ) {
                 TextButton(
-                    onClick = {},
+                    onClick = onForgotPasswordClicked,
                     modifier = Modifier.padding(4.dp)
                 ) {
                     Text(
@@ -134,7 +165,7 @@ private fun LoginContent() {
 
 
             PrimaryButton(
-                onClick = {},
+                onClick = { onLogin(email, password) },
                 text = stringResource(R.string.sign_in)
             )
 
@@ -195,7 +226,7 @@ private fun LoginContent() {
                 Spacer(modifier = Modifier.width(2.dp))
 
                 TextButton(
-                    onClick = {}
+                    onClick = onCreateAccountClicked
                 ) {
                     Text(
                         text = stringResource(R.string.create_account),
@@ -204,9 +235,6 @@ private fun LoginContent() {
                     )
                 }
             }
-
-
-
         }
     }
 }
@@ -220,6 +248,10 @@ private fun LoginContentPreview() {
         darkTheme = false,
         dynamicColor = false
     ) {
-        LoginContent()
+        LoginContent(
+            onLogin = { _, _ -> },
+            onCreateAccountClicked = {},
+            onForgotPasswordClicked = {}
+        )
     }
 }

@@ -24,7 +24,7 @@ import nondas.pap.petpal.ui.theme.PetPalTheme
 @Composable
 fun Field(
     value: String,
-    onValueChange: () -> Unit,
+    onValueChange: (String) -> Unit,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     placeholder: String = "",
     modifier: Modifier = Modifier
@@ -32,7 +32,7 @@ fun Field(
 
     OutlinedTextField(
         value = value,
-        onValueChange = { onValueChange() },
+        onValueChange = { onValueChange(it) },
         keyboardOptions = keyboardOptions,
         shape = RoundedCornerShape(14.dp),
         textStyle = MaterialTheme.typography.bodyMedium,
