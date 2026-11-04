@@ -1,8 +1,7 @@
-package nondas.pap.petpal.ui.theme.screen
+package nondas.pap.petpal.ui.screen
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,8 +28,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -59,7 +61,7 @@ private fun PetContent() {
                     containerColor = MaterialTheme.colorScheme.secondary
                 ),
                 modifier = Modifier.height(height = 56.dp),
-                shape = PetPalShapes.medium
+                shape = PetPalShapes.large
             ) {
 
                 Icon(
@@ -125,6 +127,7 @@ private fun PetContent() {
             SelectionRow(
                 firstSelectionText = stringResource(R.string.male),
                 secondSelectionText = stringResource(R.string.female),
+                modifier = Modifier.padding(horizontal = 24.dp)
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -162,18 +165,11 @@ private fun PetContent() {
                         choice = "Treatments",
                         isSelected = false
                     )
-
-
                 }
 
+
                 MedicineItem(
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Outlined.Vaccines,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
-                        )
-                    },
+                    imageVector = Icons.Outlined.Vaccines,
                     description = "Rabies booster",
                     type = "Vaccine",
                     date = "Nov 5",
@@ -182,13 +178,7 @@ private fun PetContent() {
                 )
 
                 MedicineItem(
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Outlined.Shield,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
-                        )
-                    },
+                    imageVector = Icons.Outlined.Shield,
                     description = "Flea & tick spot-on",
                     type = "Treatment",
                     date = "Dec 14",
@@ -198,13 +188,7 @@ private fun PetContent() {
 
 
                 MedicineItem(
-                    icon = {
-                        Icon(
-                            painter = painterResource(R.drawable.outline_pill_24),
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
-                        )
-                    },
+                    painter = painterResource(R.drawable.outline_pill_24),
                     description = "Flea & tick spot-on",
                     type = "Treatment",
                     date = "Dec 14",
@@ -260,7 +244,8 @@ private fun PetDetails(
 
 @Composable
 private fun MedicineItem(
-    icon: @Composable () -> Unit,
+    imageVector: ImageVector? = null,
+    painter: Painter? = null,
     description: String,
     type: String,
     date: String,
@@ -268,12 +253,20 @@ private fun MedicineItem(
     daysLeft: String
 ) {
 
+
+    val colors = listOf(
+        MaterialTheme.colorScheme.primaryContainer to MaterialTheme.colorScheme.onPrimaryContainer,
+        MaterialTheme.colorScheme.secondaryContainer to MaterialTheme.colorScheme.onSecondaryContainer
+    )
+
+    val color = remember { colors.random() }
+
     Card(
         modifier = Modifier.fillMaxWidth()
             .padding(vertical = 8.dp),
         shape = PetPalShapes.large,
         colors = CardDefaults.cardColors().copy(
-            containerColor = MaterialTheme.colorScheme.background
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
         ),
         border = BorderStroke(
             width = 1.dp,
@@ -284,18 +277,33 @@ private fun MedicineItem(
         Row(
             verticalAlignment = Alignment.CenterVertically,
 
-            modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp)
+            modifier = Modifier.padding(16.dp)
         ) {
             Box(
-                modifier = Modifier.size(60.dp)
+                modifier = Modifier.size(50.dp)
                     .background(
-                        color = MaterialTheme.colorScheme.primaryContainer,
+                        color = color.first,
                         shape = PetPalShapes.large
                     ),
                 contentAlignment = Alignment.Center,
             ) {
 
-                icon()
+                imageVector?.let {
+                    Icon(
+                        imageVector = it,
+                        contentDescription = null,
+                        tint = color.second,
+                    )
+                }
+
+                painter?.let {
+                    Icon(
+                        painter = it,
+                        contentDescription = null,
+                        tint = color.second,
+                    )
+                }
+
 
             }
 

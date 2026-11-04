@@ -1,9 +1,6 @@
-package nondas.pap.petpal.ui.theme.screen
+package nondas.pap.petpal.ui.screen
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import nondas.pap.petpal.R
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,14 +9,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -28,10 +21,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import nondas.pap.petpal.BackButton
+import nondas.pap.petpal.ui.composable.Field
+import nondas.pap.petpal.ui.composable.FieldLabel
+import nondas.pap.petpal.ui.composable.GoogleIcon
+import nondas.pap.petpal.ui.composable.PrimaryButton
+import nondas.pap.petpal.ui.composable.SecondaryButton
 import nondas.pap.petpal.ui.theme.PetPalShapes
 import nondas.pap.petpal.ui.theme.PetPalTheme
 
@@ -69,6 +66,7 @@ private fun RegisterScreenContent() {
             Spacer(modifier = Modifier.height(4.dp))
 
 
+
             Text(
                 text = stringResource(R.string.create_account_subtitle),
                 style = MaterialTheme.typography.bodyMedium,
@@ -78,113 +76,87 @@ private fun RegisterScreenContent() {
             Spacer(modifier = Modifier.height(24.dp))
 
 
-            Text(
-                text = stringResource(R.string.email),
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Start
+
+            FieldLabel(
+                text = stringResource(R.string.name),
             )
 
-            Spacer(modifier = Modifier.height(4.dp))
 
-
-            OutlinedTextField(
+            Field(
                 value = "",
                 onValueChange = {},
-                modifier = Modifier.fillMaxWidth(),
+                placeholder = stringResource(R.string.your_name)
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            FieldLabel(
+                text = stringResource(R.string.email),
+            )
+
+            Field(
+                value = "",
+                onValueChange = {},
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email
-                )
+                ),
+                placeholder = "johnDoe@gmail.com"
             )
+
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text(
+
+            FieldLabel(
                 text = stringResource(R.string.password),
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Start
             )
 
-            Spacer(modifier = Modifier.height(4.dp))
-
-            OutlinedTextField(
+            Field(
                 value = "",
                 onValueChange = {},
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password
                 ),
+                placeholder = stringResource(R.string.at_least_eight)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
 
-            Text(
+            FieldLabel(
                 text = stringResource(R.string.confirm_password),
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Start
             )
 
-            Spacer(modifier = Modifier.height(4.dp))
-
-            OutlinedTextField(
+            Field(
                 value = "",
                 onValueChange = {},
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password
                 ),
+                placeholder = stringResource(R.string.repeat_password)
             )
 
             Spacer(modifier = Modifier.weight(1f))
 
 
-            Button(
-                onClick = {},
-                modifier = Modifier.fillMaxWidth()
-                    .height(height = 54.dp),
-                shape = PetPalShapes.medium
-            ) {
-                Text(
-                    text = stringResource(R.string.create_account)
-                )
-            }
 
+            PrimaryButton(
+                onClick = {},
+                text = stringResource(R.string.create_account)
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-
-            OutlinedButton(
+            SecondaryButton(
                 onClick = {},
-                modifier = Modifier
-                    .height(56.dp)
-                    .fillMaxWidth(),
-                shape = PetPalShapes.medium
-
-            ) {
-
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier.border(
-                        border = BorderStroke(
-                            2.dp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        ),
-                        shape = CircleShape
-                    )
-                        .size(24.dp)
-                ) {
-                    Text(
-                        text = "G",
-                    )
+                text = stringResource(R.string.google_sign_in),
+                icon = {
+                    GoogleIcon()
                 }
+            )
 
-                Spacer(modifier = Modifier.width(8.dp))
-
-                Text(
-                    text = stringResource(R.string.google_sign_in),
-
-                    )
-            }
 
             Spacer(modifier = Modifier.height(24.dp))
 

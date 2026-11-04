@@ -3,6 +3,7 @@ package nondas.pap.petpal.ui.composable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -22,7 +23,9 @@ fun PrimaryButton(
         shape = PetPalShapes.medium
     ) {
         Text(
-            text = text
+            text = text,
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onPrimary
         )
     }
 }

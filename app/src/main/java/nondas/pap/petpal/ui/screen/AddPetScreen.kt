@@ -1,4 +1,4 @@
-package nondas.pap.petpal.ui.theme.screen
+package nondas.pap.petpal.ui.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -12,14 +12,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CameraAlt
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -33,6 +32,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import nondas.pap.petpal.BackButton
 import nondas.pap.petpal.R
+import nondas.pap.petpal.ui.composable.Field
+import nondas.pap.petpal.ui.composable.FieldLabel
+import nondas.pap.petpal.ui.composable.PrimaryButton
+import nondas.pap.petpal.ui.composable.SelectionRow
 import nondas.pap.petpal.ui.theme.PetPalShapes
 import nondas.pap.petpal.ui.theme.PetPalTheme
 
@@ -64,7 +67,7 @@ private fun AddPetContent() {
 
                 Text(
                     text = stringResource(R.string.add_pet),
-                    style = MaterialTheme.typography.headlineMedium
+                    style = MaterialTheme.typography.titleLarge
                 )
             }
 
@@ -79,7 +82,10 @@ private fun AddPetContent() {
                         color = MaterialTheme.colorScheme.surfaceVariant,
                         shape = PetPalShapes.extraLarge
                     )
-
+                    .background(
+                        color = MaterialTheme.colorScheme.surfaceContainerLowest,
+                        shape = PetPalShapes.extraLarge
+                    ),
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -102,31 +108,26 @@ private fun AddPetContent() {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            Text(
-                text = stringResource(R.string.name),
-                modifier = Modifier.fillMaxWidth()
-                    .padding(bottom = 4.dp),
-                textAlign = TextAlign.Start
+
+            FieldLabel(
+                text = stringResource(R.string.name)
             )
 
 
-
-            OutlinedTextField(
+            Field(
                 value = "",
                 onValueChange = {},
                 modifier = Modifier.fillMaxWidth(),
+                placeholder = "Roza"
             )
-
 
             Spacer(modifier = Modifier.height(12.dp))
 
 
-            Text(
+            FieldLabel(
                 text = stringResource(R.string.species),
-                modifier = Modifier.fillMaxWidth()
-                    .padding(bottom = 4.dp),
-                textAlign = TextAlign.Start
             )
+
 
             Row {
                 SpecieItem(
@@ -137,19 +138,19 @@ private fun AddPetContent() {
 
                 SpecieItem(
                     specie = stringResource(R.string.cat),
-                    isSelected = true,
+                    isSelected = false,
                     modifier = Modifier.weight(1f)
                 )
 
                 SpecieItem(
                     specie = stringResource(R.string.bird),
-                    isSelected = true,
+                    isSelected = false,
                     modifier = Modifier.weight(1f)
                 )
 
                 SpecieItem(
                     specie = stringResource(R.string.other),
-                    isSelected = true,
+                    isSelected = false,
                     modifier = Modifier.weight(1f)
                 )
 
@@ -159,19 +160,16 @@ private fun AddPetContent() {
             Spacer(modifier = Modifier.height(12.dp))
 
 
-            Text(
+            FieldLabel(
                 text = stringResource(R.string.breed),
-                modifier = Modifier.fillMaxWidth()
-                    .padding(bottom = 4.dp),
-                textAlign = TextAlign.Start
             )
 
 
-
-            OutlinedTextField(
+            Field(
                 value = "",
                 onValueChange = {},
                 modifier = Modifier.fillMaxWidth(),
+                placeholder = "Frenchton"
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -179,40 +177,30 @@ private fun AddPetContent() {
             Row {
 
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = stringResource(R.string.birth_date),
-                        modifier = Modifier.fillMaxWidth()
-                            .padding(bottom = 4.dp),
-                        textAlign = TextAlign.Start
+
+                    FieldLabel(
+                        text = stringResource(R.string.birth_date)
                     )
 
-                    Spacer(modifier = Modifier.height(4.dp))
-
-
-                    OutlinedTextField(
+                    Field(
                         value = "",
                         onValueChange = {},
-                        modifier = Modifier.fillMaxWidth(),
+                        placeholder = "DD / MM / YYYY"
                     )
                 }
 
                 Spacer(modifier = Modifier.width(8.dp))
 
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(
+                    FieldLabel(
                         text = stringResource(R.string.weight),
-                        modifier = Modifier.fillMaxWidth()
-                            .padding(bottom = 4.dp),
-                        textAlign = TextAlign.Start
                     )
 
-                    Spacer(modifier = Modifier.height(4.dp))
 
-
-                    OutlinedTextField(
+                    Field(
                         value = "",
                         onValueChange = {},
-                        modifier = Modifier.fillMaxWidth(),
+                        placeholder = "10 kg"
                     )
                 }
 
@@ -221,116 +209,49 @@ private fun AddPetContent() {
             Spacer(modifier = Modifier.height(12.dp))
 
 
-    //        Text(
-    //            text = stringResource(R.string.sex),
-    //            modifier = Modifier.fillMaxWidth()
-    //                .padding(bottom = 4.dp),
-    //            textAlign = TextAlign.Start
-    //        )
+            FieldLabel(
+                text = "Sex"
+            )
 
 
-            Row(
-                modifier = Modifier.fillMaxWidth()
-                    .height(56.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                        shape = PetPalShapes.medium
-                    )
-                    .padding(horizontal = 4.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            SelectionRow(
+                firstSelectionText = "Male",
+                secondSelectionText = "Female"
+            )
 
-                SexItem(
-                    sex = stringResource(R.string.male),
-                    isSelected = true,
-                    modifier = Modifier.weight(1f)
-                )
-
-                SexItem(
-                    sex = stringResource(R.string.female),
-                    isSelected = false,
-                    modifier = Modifier.weight(1f)
-
-                )
-
-            }
 
             Spacer(modifier = Modifier.height(12.dp))
 
 
-            Text(
+            FieldLabel(
                 text = stringResource(R.string.microchip),
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Start
             )
 
             Spacer(modifier = Modifier.height(4.dp))
 
 
-            OutlinedTextField(
+            Field(
                 value = "",
                 onValueChange = {},
-                modifier = Modifier.fillMaxWidth(),
+                placeholder = "15 Digits"
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            Text(
-                text = stringResource(R.string.vet_clinic),
-                modifier = Modifier.fillMaxWidth()
-                    .padding(bottom = 4.dp),
-                textAlign = TextAlign.Start
-            )
-
-
-            OutlinedTextField(
-                value = "",
-                onValueChange = {},
-                modifier = Modifier.fillMaxWidth(),
-            )
 
             Spacer(modifier = Modifier.weight(1f))
 
 
-            Button(
+            PrimaryButton(
                 onClick = {},
-                modifier = Modifier.fillMaxWidth()
-                    .height(height = 54.dp),
-                shape = PetPalShapes.medium
-            ) {
-                Text(
-                    text = stringResource(R.string.save_pet)
-                )
-            }
+                text = stringResource(R.string.save_pet)
+            )
 
         }
     }
 
 }
 
-@Composable
-private fun SexItem(
-    sex: String,
-    isSelected: Boolean,
-    modifier: Modifier = Modifier
-) {
-    val color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
-    val backgroundColor = if (isSelected) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.surfaceVariant
-
-    Text(
-        text = sex,
-        color = color,
-        style = MaterialTheme.typography.labelMedium,
-        textAlign = TextAlign.Center,
-        modifier = modifier
-            .background(
-                color = backgroundColor,
-                shape = PetPalShapes.small
-            )
-            .padding( vertical = 12.dp)
-
-    )
-}
 
 @Composable
 private fun SpecieItem(
@@ -339,11 +260,12 @@ private fun SpecieItem(
     modifier: Modifier = Modifier
 ) {
 
-    val color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant
-    val backgroundColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.background
+    val textColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
+    val borderColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f)
+    val backgroundColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerLowest
     Text(
         text = specie,
-        color = color,
+        color = textColor,
         textAlign = TextAlign.Center,
         modifier = modifier
             .padding(horizontal = 4.dp)
@@ -353,7 +275,7 @@ private fun SpecieItem(
             )
             .border(
                 width = 1.dp,
-                color = color,
+                color = borderColor,
                 shape = PetPalShapes.medium
             )
             .padding(horizontal = 16.dp, vertical = 12.dp)

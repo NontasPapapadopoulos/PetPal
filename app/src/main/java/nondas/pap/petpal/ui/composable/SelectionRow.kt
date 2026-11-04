@@ -22,10 +22,10 @@ import nondas.pap.petpal.ui.theme.PetPalTheme
 fun SelectionRow(
     firstSelectionText: String,
     secondSelectionText: String,
+    modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth()
-            .padding(horizontal = 24.dp)
+        modifier = modifier.fillMaxWidth()
             .height(52.dp)
             .background(
                 color = MaterialTheme.colorScheme.surfaceContainerHigh,
@@ -59,7 +59,7 @@ private fun SelectionItem(
 ) {
 
     val color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
-    val backgroundColor = if (isSelected) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.surfaceVariant
+    val backgroundColor = if (isSelected) MaterialTheme.colorScheme.surfaceContainerLowest else MaterialTheme.colorScheme.surfaceVariant
 
 
     Text(

@@ -1,27 +1,26 @@
-package nondas.pap.petpal.ui.theme.screen
+package nondas.pap.petpal.ui.screen
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.outlined.ArrowForwardIos
-import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -30,10 +29,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import nondas.pap.petpal.R
+import nondas.pap.petpal.ui.Screen
+import nondas.pap.petpal.ui.composable.Badge
+import nondas.pap.petpal.ui.composable.BottomAppBar
+import nondas.pap.petpal.ui.composable.ForwardArrowIcon
 import nondas.pap.petpal.ui.theme.PetPalShapes
 import nondas.pap.petpal.ui.theme.PetPalTheme
 
@@ -49,49 +53,10 @@ private fun HomeContent() {
 
     Scaffold(
         bottomBar = {
-            BottomAppBar() {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.weight(1f)
-
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Home,
-                        tint = MaterialTheme.colorScheme.primary,
-                        contentDescription = null
-                    )
-
-                    Text(
-                        text = stringResource(R.string.home),
-                        color = MaterialTheme.colorScheme.primary,
-
-                        )
-                }
-
-
-
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .weight(1f)
-                        .clickable {
-
-                         }
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Settings,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                        contentDescription = null
-                    )
-
-                    Text(
-                        text = stringResource(R.string.settings),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-
-                        )
-                }
-
-            }
+            BottomAppBar(
+                screen = Screen.Home,
+                onHomeClicked = {}
+            )
         }
     ) {
         Column(
@@ -110,23 +75,34 @@ private fun HomeContent() {
                 Column {
                     Text(
                         text = "Monday, 2 November",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
 
                     Text(
                         text = "Hi, Nondas",
-                        style = MaterialTheme.typography.headlineMedium
+                        style = MaterialTheme.typography.headlineSmall
                     )
                 }
 
                 OutlinedButton(
                     onClick = {},
+                    shape = RoundedCornerShape(16.dp),
+                    contentPadding = PaddingValues(16.dp),
+                    border = BorderStroke(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f)
+                    ),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = MaterialTheme.colorScheme.surfaceContainerLowest,
+                    )
 
-                    shape = RoundedCornerShape(24.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.Notifications,
                         contentDescription = null,
-                        modifier = Modifier.padding(vertical = 16.dp)
+                        tint = MaterialTheme.colorScheme.onBackground,
+                        modifier = Modifier.size(24.dp)
                     )
                 }
             }
@@ -163,7 +139,7 @@ private fun HomeContent() {
             OutlinedButton(
                 onClick = {},
                 modifier = Modifier.fillMaxWidth()
-                    .height(64.dp),
+                    .height(56.dp),
                 shape = PetPalShapes.large,
             ) {
 
@@ -203,43 +179,48 @@ private fun PetItem(
             .padding(vertical = 8.dp),
         border = BorderStroke(
             width = 1.dp,
-            color = MaterialTheme.colorScheme.surfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f)
+        ),
+        colors = CardDefaults.cardColors().copy(
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
         )
     ) {
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(vertical = 24.dp, horizontal = 8.dp)
+            modifier = Modifier.padding(vertical = 24.dp, horizontal = 16.dp)
         ) {
 
-            Text(
-                text = name[0].toString().capitalize()
-            )
+            Badge(name)
 
             Spacer(modifier = Modifier.width(16.dp))
 
             Column {
                 Text(
-                    text = name
+                    text = name,
+                    style = MaterialTheme.typography.titleMedium
                 )
 
                 Text(
-                    text = "$specie · $breed · $age y"
+                    text = "$specie · $breed · $age y",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
             Spacer(modifier = Modifier.weight(1f))
 
-            Icon(
-                imageVector = Icons.Outlined.ArrowForwardIos,
-                contentDescription = null
-            )
+            ForwardArrowIcon()
         }
 
     }
 }
 
-
+fun Color.darken(factor: Float = 0.6f): Color = copy(
+    red = red * factor,
+    green = green * factor,
+    blue = blue * factor
+)
 
 
 @Preview

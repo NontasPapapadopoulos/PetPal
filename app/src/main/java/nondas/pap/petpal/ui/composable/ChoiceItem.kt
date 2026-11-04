@@ -22,6 +22,7 @@ fun ChoiceItem(
     Text(
         text = choice,
         color = color,
+        style = MaterialTheme.typography.bodySmall,
         modifier = modifier
             .padding(horizontal = 2.dp, vertical = 4.dp)
             .background(color = backgroundColor, shape = PetPalShapes.large)

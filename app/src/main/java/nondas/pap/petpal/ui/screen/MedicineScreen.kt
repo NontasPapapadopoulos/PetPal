@@ -1,4 +1,4 @@
-package nondas.pap.petpal.ui.theme.screen
+package nondas.pap.petpal.ui.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -28,16 +28,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.layout
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import nondas.pap.petpal.BackButton
 import nondas.pap.petpal.R
+import nondas.pap.petpal.ui.composable.Badge
 import nondas.pap.petpal.ui.composable.ChoiceItem
-import nondas.pap.petpal.ui.composable.FieldTitle
+import nondas.pap.petpal.ui.composable.Field
+import nondas.pap.petpal.ui.composable.FieldLabel
 import nondas.pap.petpal.ui.composable.PrimaryButton
 import nondas.pap.petpal.ui.composable.SelectionRow
 import nondas.pap.petpal.ui.theme.PetPalShapes
@@ -73,7 +73,7 @@ private fun MedicineContent() {
 
                 Text(
                     text = stringResource(R.string.add_medicine),
-                    style = MaterialTheme.typography.headlineMedium
+                    style = MaterialTheme.typography.titleLarge
                 )
 
             }
@@ -88,7 +88,7 @@ private fun MedicineContent() {
             Spacer(modifier = Modifier.height(16.dp))
 
 
-            FieldTitle(text = stringResource(R.string.forr))
+            FieldLabel(text = stringResource(R.string.forr))
 
             FlowRow(
                 modifier = Modifier.fillMaxWidth(),
@@ -102,7 +102,7 @@ private fun MedicineContent() {
             Spacer(modifier = Modifier.height(16.dp))
 
 
-            FieldTitle(text = stringResource(R.string.type))
+            FieldLabel(text = stringResource(R.string.type))
 
             FlowRow(
                 modifier = Modifier.fillMaxWidth(),
@@ -132,22 +132,12 @@ private fun MedicineContent() {
             Spacer(modifier = Modifier.height(16.dp))
 
 
-            FieldTitle(text = stringResource(R.string.medicine_name))
+            FieldLabel(text = stringResource(R.string.medicine_name))
 
-            OutlinedTextField(
+            Field(
                 value = "",
                 onValueChange = {},
-                modifier = Modifier.fillMaxWidth()
-                    .height(56.dp),
-                shape = PetPalShapes.medium,
-                placeholder = {
-                    Text(
-                        text = "e.g. Rabies booster",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-                        fontWeight = FontWeight.W100
-                    )
-                }
+                placeholder = "e.g. Rabies booster"
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -155,45 +145,29 @@ private fun MedicineContent() {
 
             Row {
                 Column(modifier = Modifier.weight(1f)) {
-                    FieldTitle(
+                    FieldLabel(
                         text = stringResource(R.string.dose)
                     )
 
-                    OutlinedTextField(
+                    Field(
                         value = "",
                         onValueChange = {},
-                        modifier = Modifier.fillMaxWidth(),
-                        placeholder = {
-                            Text(
-                                text = "e.g. 1 tablet",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-                                fontWeight = FontWeight.W100
-                            )
-                        }
+                        placeholder = "e.g. 1 tablet"
                     )
                 }
 
                 Spacer(modifier = Modifier.width(8.dp))
 
                 Column(modifier = Modifier.weight(1f)) {
-                    FieldTitle(
+                    FieldLabel(
                         text = stringResource(R.string.start_due_date)
                     )
 
 
-                    OutlinedTextField(
+                    Field(
                         value = "",
                         onValueChange = {},
-                        modifier = Modifier.fillMaxWidth(),
-                        placeholder = {
-                            Text(
-                                text = "DD / MM / YYYY",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-                                fontWeight = FontWeight.W100
-                            )
-                        }
+                        placeholder = "DD / MM / YYYY",
                     )
                 }
             }
@@ -201,7 +175,7 @@ private fun MedicineContent() {
             Spacer(modifier = Modifier.height(16.dp))
 
 
-            FieldTitle(
+            FieldLabel(
                 text = stringResource(R.string.repeats)
             )
 
@@ -241,23 +215,17 @@ private fun MedicineContent() {
             Spacer(modifier = Modifier.height(16.dp))
 
 
-            FieldTitle(
+            FieldLabel(
                 text = stringResource(R.string.notes)
             )
 
-            OutlinedTextField(
+            Field(
                 value = "",
                 onValueChange = {},
                 modifier = Modifier.fillMaxWidth()
                     .height(88.dp),
-                placeholder = {
-                    Text(
-                        text = stringResource(R.string.notes_placeholder),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-                        fontWeight = FontWeight.W100
-                    )
-                }
+                placeholder =  stringResource(R.string.notes_placeholder)
+
             )
 
 
@@ -269,10 +237,6 @@ private fun MedicineContent() {
             )
 
         }
-
-
-
-
     }
 }
 
@@ -286,26 +250,32 @@ private fun PetItem(
     isSelected: Boolean
 ) {
     val borderWidth = if (isSelected) 2.dp else 1.dp
-    val borderColor = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f)
-    val backgroundColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.background
-    val textColor = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
+    val borderColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f)
+    val backgroundColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerLowest
+    val textColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
 
 
     Row(
         modifier = Modifier
             .border(width = borderWidth, color = borderColor, shape = PetPalShapes.medium)
             .background(color = backgroundColor, shape = PetPalShapes.medium)
-            .padding(horizontal = 16.dp, vertical = 16.dp)
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            text = name[0].toString().capitalize()
+
+        Badge(
+            text = name,
+            size = 44
         )
+
+
 
         Spacer(modifier = Modifier.width(8.dp))
 
         Text(
             text = name,
-            color = textColor
+            color = textColor,
+            style = MaterialTheme.typography.titleMedium
         )
 
 
@@ -321,8 +291,8 @@ private fun MedicineItem(
 ) {
     val borderWidth = if (isSelected) 2.dp else 1.dp
     val borderColor = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f)
-    val backgroundColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.background
-    val textColor = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
+    val backgroundColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerLowest
+    val textColor = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onBackground
 
 
     Row(
@@ -334,7 +304,8 @@ private fun MedicineItem(
 
         Text(
             text = name,
-            color = textColor
+            color = textColor,
+            style = MaterialTheme.typography.titleSmall
         )
 
 
@@ -350,7 +321,7 @@ private fun NotificationSettingsContainer() {
     Column(
         modifier = Modifier
             .background(
-                color = MaterialTheme.colorScheme.background,
+                color = MaterialTheme.colorScheme.surfaceContainerLowest,
                 shape = PetPalShapes.large,
             )
             .border(

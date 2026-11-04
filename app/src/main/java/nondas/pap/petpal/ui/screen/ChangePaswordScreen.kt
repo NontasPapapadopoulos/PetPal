@@ -1,9 +1,6 @@
-package nondas.pap.petpal.ui.theme.screen
+package nondas.pap.petpal.ui.screen
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import nondas.pap.petpal.R
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,24 +9,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material.icons.outlined.Circle
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,6 +31,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import nondas.pap.petpal.BackButton
+import nondas.pap.petpal.ui.composable.Field
+import nondas.pap.petpal.ui.composable.FieldLabel
+import nondas.pap.petpal.ui.composable.PrimaryButton
 import nondas.pap.petpal.ui.theme.PetPalShapes
 import nondas.pap.petpal.ui.theme.PetPalTheme
 
@@ -89,73 +84,74 @@ private fun ChangePasswordScreenContent() {
             Spacer(modifier = Modifier.height(24.dp))
 
 
-            Text(
+            FieldLabel(
                 text = stringResource(R.string.current_password),
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Start
             )
 
-            Spacer(modifier = Modifier.height(4.dp))
 
-
-            OutlinedTextField(
+            Field(
                 value = "",
                 onValueChange = {},
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password
-                )
+                ),
+                placeholder = stringResource(R.string.current_password)
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 16.dp)
+            )
 
 
-            HorizontalDivider()
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
+            FieldLabel(
                 text = stringResource(R.string.new_password),
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Start
             )
 
-            Spacer(modifier = Modifier.height(4.dp))
 
-            OutlinedTextField(
+            Field(
                 value = "",
                 onValueChange = {},
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password
                 ),
+                placeholder = stringResource(R.string.at_least_eight)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
 
-            Text(
+            FieldLabel(
                 text = stringResource(R.string.confirm_new_password),
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Start
             )
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            OutlinedTextField(
+
+
+            Field(
                 value = "",
                 onValueChange = {},
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password
                 ),
+                placeholder = stringResource(R.string.repeat_password)
             )
+
 
             Spacer(modifier = Modifier.height(24.dp))
 
 
-            Card(
+            Column (
                 modifier = Modifier.fillMaxWidth()
+                    .border(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(0.2f),
+                        shape = PetPalShapes.large
+
+                    )
             ) {
                 Text(
                     text = stringResource(R.string.password_needs),
@@ -183,16 +179,10 @@ private fun ChangePasswordScreenContent() {
             Spacer(modifier = Modifier.weight(1f))
 
 
-            Button(
+            PrimaryButton(
                 onClick = {},
-                modifier = Modifier.fillMaxWidth()
-                    .height(height = 54.dp),
-                shape = PetPalShapes.medium
-            ) {
-                Text(
-                    text = stringResource(R.string.update_password)
-                )
-            }
+                text = stringResource(R.string.update_password)
+            )
 
         }
 
@@ -222,7 +212,8 @@ private fun PasswordRule(
 
         Text(
             text = text,
-            color = color
+            color = color,
+            style = MaterialTheme.typography.bodyMedium
         )
     }
 

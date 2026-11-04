@@ -1,4 +1,4 @@
-package nondas.pap.petpal.ui.theme.screen
+package nondas.pap.petpal.ui.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -9,18 +9,16 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
@@ -33,9 +31,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import nondas.pap.petpal.R
+import nondas.pap.petpal.ui.Screen
+import nondas.pap.petpal.ui.composable.BottomAppBar
+import nondas.pap.petpal.ui.composable.ForwardArrowIcon
 import nondas.pap.petpal.ui.theme.PetPalShapes
 import nondas.pap.petpal.ui.theme.PetPalTheme
-import java.nio.file.WatchEvent
 
 
 @Composable
@@ -49,46 +49,10 @@ private fun SettingsContent() {
 
     Scaffold(
         bottomBar = {
-            BottomAppBar() {
-
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .weight(1f)
-                        .clickable {
-
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Home,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                        contentDescription = null
-                    )
-
-                    Text(
-                        text = stringResource(R.string.home),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
-
-
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Settings,
-                        tint = MaterialTheme.colorScheme.primary,
-                        contentDescription = null
-                    )
-
-                    Text(
-                        text = stringResource(R.string.settings),
-                        color = MaterialTheme.colorScheme.primary,
-
-                        )
-                }
-            }
+            BottomAppBar(
+                screen = Screen.Settings,
+                onHomeClicked = {}
+            )
         }
     ) {
 
@@ -101,7 +65,7 @@ private fun SettingsContent() {
 
             Text(
                 text = stringResource(R.string.settings),
-                style = MaterialTheme.typography.headlineMedium
+                style = MaterialTheme.typography.headlineSmall
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -109,7 +73,7 @@ private fun SettingsContent() {
             Row(
                 modifier = Modifier.fillMaxWidth()
                     .background(
-                        color = MaterialTheme.colorScheme.background,
+                        color = MaterialTheme.colorScheme.surfaceContainerLowest,
                         shape = PetPalShapes.large,
                     )
                     .border(
@@ -160,10 +124,7 @@ private fun SettingsContent() {
                     primaryText = stringResource(R.string.default_reminder),
                     secondaryText = "1 day before",
                     composable = {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
-                            contentDescription = null
-                        )
+                        ForwardArrowIcon()
                     }
                 )
 
@@ -175,10 +136,7 @@ private fun SettingsContent() {
                     primaryText = stringResource(R.string.reminder_time),
                     secondaryText = "09:00",
                     composable = {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
-                            contentDescription = null
-                        )
+                        ForwardArrowIcon()
                     }
                 )
 
@@ -196,10 +154,7 @@ private fun SettingsContent() {
                     primaryText = stringResource(R.string.theme),
                     secondaryText = stringResource(R.string.system_default),
                     composable = {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
-                            contentDescription = null
-                        )
+                        ForwardArrowIcon()
                     }
                 )
 
@@ -211,10 +166,7 @@ private fun SettingsContent() {
                     primaryText = stringResource(R.string.export),
                     secondaryText = stringResource(R.string.pdf),
                     composable = {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
-                            contentDescription = null
-                        )
+                        ForwardArrowIcon()
                     }
                 )
 
@@ -232,10 +184,7 @@ private fun SettingsContent() {
                     onClick = {},
                     primaryText = stringResource(R.string.change_password),
                     composable = {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
-                            contentDescription = null
-                        )
+                        ForwardArrowIcon()
                     }
                 )
 
@@ -248,7 +197,9 @@ private fun SettingsContent() {
                     composable = {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Logout,
-                            contentDescription = null
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.size(20.dp)
                         )
                     }
                 )
@@ -288,7 +239,8 @@ private fun SettingCategory(
     Text(
         text = text.uppercase(),
         color = MaterialTheme.colorScheme.onSurfaceVariant,
-        modifier = Modifier.padding(vertical = 12.dp)
+        modifier = Modifier.padding(vertical = 12.dp),
+        style = MaterialTheme.typography.labelSmall
     )
 }
 
@@ -299,7 +251,7 @@ private fun SettingsContainer(
     Column(
         modifier = Modifier.fillMaxWidth()
             .background(
-                color = MaterialTheme.colorScheme.background,
+                color = MaterialTheme.colorScheme.surfaceContainerLowest,
                 shape = PetPalShapes.large,
             )
             .border(
@@ -346,6 +298,7 @@ private fun SettingItem(
     }
 
 }
+
 
 @Preview
 @Composable

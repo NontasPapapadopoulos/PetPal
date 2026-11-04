@@ -1,4 +1,4 @@
-package nondas.pap.petpal.ui.theme.screen
+package nondas.pap.petpal.ui.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Lock
@@ -29,6 +28,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import nondas.pap.petpal.BackButton
+import nondas.pap.petpal.ui.composable.Field
+import nondas.pap.petpal.ui.composable.FieldLabel
+import nondas.pap.petpal.ui.composable.PrimaryButton
 import nondas.pap.petpal.ui.theme.PetPalShapes
 import nondas.pap.petpal.ui.theme.PetPalTheme
 
@@ -95,39 +97,27 @@ private fun ForgotPasswordContent() {
             Spacer(modifier = Modifier.height(24.dp))
 
 
-            Text(
+            FieldLabel(
                 text = stringResource(R.string.email),
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Start
             )
 
-            Spacer(modifier = Modifier.height(4.dp))
-
-
-            OutlinedTextField(
+            Field(
                 value = "",
                 onValueChange = {},
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email
-                )
+                ),
+                placeholder = "johnDoe@gmail.com"
             )
 
 
             Spacer(modifier = Modifier.height(24.dp))
 
-
-            Button(
+            PrimaryButton(
                 onClick = {},
-                modifier = Modifier.fillMaxWidth()
-                    .height(height = 54.dp),
-                shape = PetPalShapes.medium
-            ) {
-                Text(
-                    text = stringResource(R.string.send_reset_link)
-                )
-            }
-
+                text = stringResource(R.string.send_reset_link)
+            )
 
         }
 

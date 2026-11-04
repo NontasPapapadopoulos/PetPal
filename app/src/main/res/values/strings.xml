@@ -91,5 +91,6 @@ before choosing a new one.</string>
     <string name="delete_account">Delete account</string>
     <string name="system_default">System default</string>
     <string name="home">Home</string>
-
+    <string name="your_name">Your name</string>
+    <string name="repeat_password">Repeat password</string>
 </resources>
