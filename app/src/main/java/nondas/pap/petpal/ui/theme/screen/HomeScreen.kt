@@ -1,6 +1,7 @@
 package nondas.pap.petpal.ui.theme.screen
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,7 +17,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.ArrowForwardIos
+import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -43,7 +47,53 @@ private fun HomeScreen() {
 @Composable
 private fun HomeContent() {
 
-    Scaffold {
+    Scaffold(
+        bottomBar = {
+            BottomAppBar() {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.weight(1f)
+
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Home,
+                        tint = MaterialTheme.colorScheme.primary,
+                        contentDescription = null
+                    )
+
+                    Text(
+                        text = stringResource(R.string.home),
+                        color = MaterialTheme.colorScheme.primary,
+
+                        )
+                }
+
+
+
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .weight(1f)
+                        .clickable {
+
+                         }
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Settings,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        contentDescription = null
+                    )
+
+                    Text(
+                        text = stringResource(R.string.settings),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+
+                        )
+                }
+
+            }
+        }
+    ) {
         Column(
             modifier = Modifier.fillMaxSize()
                 .padding(it)

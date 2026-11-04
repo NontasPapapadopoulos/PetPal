@@ -27,6 +27,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldColors
@@ -55,208 +56,211 @@ fun LoginScreen() {
 
 @Composable
 private fun LoginContent() {
-    Column(
-        modifier = Modifier.fillMaxSize()
-            .padding(horizontal = 24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    Scaffold() {
+        Column(
+            modifier = Modifier.fillMaxSize()
+                .padding(it)
+                .padding(horizontal = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
-        Spacer(modifier = Modifier.height(56.dp))
+            Spacer(modifier = Modifier.height(56.dp))
 
-        Icon(
-            imageVector = Icons.Outlined.Pets,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.background,
-            modifier = Modifier
-                .background(
-                    color = MaterialTheme.colorScheme.primary,
-                    shape = RoundedCornerShape(topStart = 22.dp, topEnd = 22.dp, bottomEnd = 22.dp, bottomStart = 8.dp)
-                )
-                .padding(24.dp)
-                .size(72.dp)
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            text = stringResource(R.string.welcome_back),
-            style = MaterialTheme.typography.headlineMedium,
-
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            text = stringResource(R.string.sign_in_subtitle),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Text(
-            text = stringResource(R.string.email),
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Start
-        )
-
-        Spacer(modifier = Modifier.height(4.dp))
-
-
-        OutlinedTextField(
-            value = "",
-            onValueChange = {},
-            modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Email
+            Icon(
+                imageVector = Icons.Outlined.Pets,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.background,
+                modifier = Modifier
+                    .background(
+                        color = MaterialTheme.colorScheme.primary,
+                        shape = RoundedCornerShape(topStart = 22.dp, topEnd = 22.dp, bottomEnd = 22.dp, bottomStart = 8.dp)
+                    )
+                    .padding(24.dp)
+                    .size(72.dp)
             )
-        )
 
-        Spacer(modifier = Modifier.height(12.dp))
-
-        Text(
-            text = stringResource(R.string.password),
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Start
-        )
-
-        Spacer(modifier = Modifier.height(4.dp))
-
-        OutlinedTextField(
-            value = "",
-            onValueChange = {},
-            modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Password
-            ),
-        )
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.End
-        ) {
-            TextButton(
-                onClick = {},
-                modifier = Modifier.padding(4.dp)
-            ) {
-                Text(
-                    text = stringResource(R.string.forgot_password),
-                    style = MaterialTheme.typography.labelLarge
-                )
-            }
-        }
-
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-
-        Button(
-            onClick = {},
-            modifier = Modifier.fillMaxWidth()
-                .height(height = 54.dp),
-            shape = PetPalShapes.medium
-        ) {
-            Text(
-                text = stringResource(R.string.sign_in)
-            )
-        }
-
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            HorizontalDivider(modifier = Modifier.weight(1f))
-
-            Spacer(modifier = Modifier.width(12.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = stringResource(R.string.or),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.outlineVariant
+                text = stringResource(R.string.welcome_back),
+                style = MaterialTheme.typography.headlineMedium,
+
             )
 
-            Spacer(modifier = Modifier.width(12.dp))
-
-
-            HorizontalDivider(
-                modifier = Modifier.weight(1f),
-                color = MaterialTheme.colorScheme.outlineVariant
-            )
-
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-
-        OutlinedButton(
-            onClick = {},
-            modifier = Modifier
-                .height(56.dp)
-                .fillMaxWidth(),
-            shape = PetPalShapes.medium
-
-        ) {
-
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.border(
-                    border = BorderStroke(
-                        2.dp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    ),
-                    shape = CircleShape
-                )
-                    .size(24.dp)
-            ) {
-                Text(
-                    text = "G",
-                )
-            }
-
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = stringResource(R.string.google_sign_in),
-
-            )
-        }
-
-
-        Spacer(modifier = Modifier.weight(1f))
-
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-
-            Text(
-                text = stringResource(R.string.new_to_petpal),
-                style = MaterialTheme.typography.bodySmall,
+                text = stringResource(R.string.sign_in_subtitle),
+                style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
-            Spacer(modifier = Modifier.width(2.dp))
 
-            TextButton(
-                onClick = {}
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text(
+                text = stringResource(R.string.email),
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Start
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+
+            OutlinedTextField(
+                value = "",
+                onValueChange = {},
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email
+                )
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = stringResource(R.string.password),
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Start
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            OutlinedTextField(
+                value = "",
+                onValueChange = {},
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password
+                ),
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                TextButton(
+                    onClick = {},
+                    modifier = Modifier.padding(4.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.forgot_password),
+                        style = MaterialTheme.typography.labelLarge
+                    )
+                }
+            }
+
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+
+            Button(
+                onClick = {},
+                modifier = Modifier.fillMaxWidth()
+                    .height(height = 54.dp),
+                shape = PetPalShapes.medium
             ) {
                 Text(
-                    text = stringResource(R.string.create_account),
-                    style = MaterialTheme.typography.bodySmall
+                    text = stringResource(R.string.sign_in)
+                )
+            }
+
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                HorizontalDivider(modifier = Modifier.weight(1f))
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                Text(
+                    text = stringResource(R.string.or),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.outlineVariant
+                )
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+
+                HorizontalDivider(
+                    modifier = Modifier.weight(1f),
+                    color = MaterialTheme.colorScheme.outlineVariant
+                )
+
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+
+            OutlinedButton(
+                onClick = {},
+                modifier = Modifier
+                    .height(56.dp)
+                    .fillMaxWidth(),
+                shape = PetPalShapes.medium
+
+            ) {
+
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.border(
+                        border = BorderStroke(
+                            2.dp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        ),
+                        shape = CircleShape
+                    )
+                        .size(24.dp)
+                ) {
+                    Text(
+                        text = "G",
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Text(
+                    text = stringResource(R.string.google_sign_in),
 
                 )
             }
+
+
+            Spacer(modifier = Modifier.weight(1f))
+
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+
+                Text(
+                    text = stringResource(R.string.new_to_petpal),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
+                Spacer(modifier = Modifier.width(2.dp))
+
+                TextButton(
+                    onClick = {}
+                ) {
+                    Text(
+                        text = stringResource(R.string.create_account),
+                        style = MaterialTheme.typography.bodySmall
+
+                    )
+                }
+            }
+
+
+
         }
-
-        
-
     }
 }
 
