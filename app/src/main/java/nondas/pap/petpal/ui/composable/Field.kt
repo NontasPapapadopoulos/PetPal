@@ -27,6 +27,7 @@ fun Field(
     onValueChange: (String) -> Unit,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     placeholder: String = "",
+    readOnly: Boolean = false,
     modifier: Modifier = Modifier
 ) {
 
@@ -49,16 +50,13 @@ fun Field(
             focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
             unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
         ),
+        readOnly = readOnly,
         modifier = modifier.fillMaxWidth()
             .height(52.dp),
     )
 
 }
 
-//colors = OutlinedTextFieldDefaults.colors().copy(
-//focusedTextColor = MaterialTheme.colorScheme.primary,
-//unf
-//),
 
 
 @Preview

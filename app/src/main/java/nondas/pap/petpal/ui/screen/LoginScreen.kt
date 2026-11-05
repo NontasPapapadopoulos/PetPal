@@ -1,5 +1,6 @@
 package nondas.pap.petpal.ui.screen
 
+import android.provider.Settings.Global.getString
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,13 +20,16 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,12 +37,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.collectLatest
 import nondas.pap.petpal.R
+import nondas.pap.petpal.presentation.LoginState
 import nondas.pap.petpal.presentation.LoginViewModel
 import nondas.pap.petpal.ui.composable.Field
 import nondas.pap.petpal.ui.composable.FieldLabel
 import nondas.pap.petpal.ui.composable.GoogleIcon
+import nondas.pap.petpal.ui.composable.LoadingBox
 import nondas.pap.petpal.ui.composable.PrimaryButton
 import nondas.pap.petpal.ui.composable.SecondaryButton
 import nondas.pap.petpal.ui.theme.PetPalTheme
@@ -58,22 +65,42 @@ fun LoginScreen(
         }
     }
 
+    val snackBarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(Unit) {
+        viewModel.errorFlow.collectLatest { throwable ->
+            snackBarHostState.showSnackbar(throwable.message ?: "Something went wrong")
+        }
+    }
+
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+
 
     LoginContent(
+        state = state,
         onLogin = { email, password -> viewModel.onLogin(email, password) },
+        onContinueWithGoogleClicked = { viewModel.onLoginWithGoogle() },
         onForgotPasswordClicked = navigateToForgotPassword,
-        onCreateAccountClicked = navigateToCreateAccount
+        onCreateAccountClicked = navigateToCreateAccount,
+        snackBarHost = { SnackbarHost(snackBarHostState) }
     )
 }
 
 
 @Composable
 private fun LoginContent(
+    state: LoginState,
     onLogin: (email: String, password: String) -> Unit,
     onForgotPasswordClicked: () -> Unit,
     onCreateAccountClicked: () -> Unit,
+    onContinueWithGoogleClicked: () -> Unit,
+    snackBarHost: @Composable () -> Unit
 ) {
-    Scaffold {
+    Scaffold(
+        snackbarHost = {
+            snackBarHost()
+        }
+    ) {
         Column(
             modifier = Modifier.fillMaxSize()
                 .padding(it)
@@ -81,8 +108,8 @@ private fun LoginContent(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
 
-            var email by rememberSaveable { mutableStateOf("") }
-            var password by rememberSaveable { mutableStateOf("") }
+            var email by remember { mutableStateOf("") }
+            var password by remember { mutableStateOf("") }
 
             Spacer(modifier = Modifier.height(56.dp))
 
@@ -200,7 +227,7 @@ private fun LoginContent(
 
 
             SecondaryButton(
-                onClick = {},
+                onClick = onContinueWithGoogleClicked,
                 text = stringResource(R.string.google_sign_in),
                 icon = {
                     GoogleIcon()
@@ -236,6 +263,10 @@ private fun LoginContent(
                 }
             }
         }
+
+        if (state.isLoading)
+            LoadingBox()
+
     }
 }
 
@@ -249,9 +280,12 @@ private fun LoginContentPreview() {
         dynamicColor = false
     ) {
         LoginContent(
+            state = LoginState(isLoading = true),
             onLogin = { _, _ -> },
             onCreateAccountClicked = {},
-            onForgotPasswordClicked = {}
+            onForgotPasswordClicked = {},
+            onContinueWithGoogleClicked = {},
+            snackBarHost = {}
         )
     }
 }

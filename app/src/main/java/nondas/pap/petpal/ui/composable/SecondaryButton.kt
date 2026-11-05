@@ -25,7 +25,8 @@ import androidx.compose.ui.unit.dp
 fun SecondaryButton(
     onClick: () -> Unit,
     text: String,
-    icon: @Composable () -> Unit
+    icon: @Composable () -> Unit,
+    enabled: Boolean = true
 ) {
     OutlinedButton(
         onClick = onClick,
@@ -36,7 +37,8 @@ fun SecondaryButton(
         border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.outlineVariant),
         colors = ButtonDefaults.outlinedButtonColors().copy(
             containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
-        )
+        ),
+        enabled = enabled
     ) {
 
         icon()

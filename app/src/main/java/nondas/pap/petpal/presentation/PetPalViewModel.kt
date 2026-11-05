@@ -18,6 +18,9 @@ abstract class PetPalViewModel<N> : ViewModel() { //in E : Any, out S, N
     private val _errorFlow = MutableSharedFlow<Throwable>()
     open val errorFlow: SharedFlow<Throwable> = _errorFlow.asSharedFlow()
 
+    private val _messageFlow = MutableSharedFlow<String>()
+    open val messageFlow: SharedFlow<String> = _messageFlow.asSharedFlow()
+
     private val _navigationFlow = MutableSharedFlow<N>()
     open val navigationFlow: SharedFlow<N> = _navigationFlow.asSharedFlow()
 
@@ -39,6 +42,10 @@ abstract class PetPalViewModel<N> : ViewModel() { //in E : Any, out S, N
 
     protected open suspend fun navigateTo(navigationTarget: N) {
         _navigationFlow.emit(navigationTarget)
+    }
+
+    protected open suspend fun showMessage(message: String) {
+        _messageFlow.emit(message)
     }
 
 //    inline fun <reified T> onState(block: (state: T) -> Unit) {

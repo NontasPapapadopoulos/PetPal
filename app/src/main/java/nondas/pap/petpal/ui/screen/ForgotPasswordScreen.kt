@@ -16,14 +16,25 @@ import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.flow.collectLatest
+import nondas.pap.petpal.presentation.ForgotPasswordViewmodel
+import nondas.pap.petpal.presentation.RegisterNavigationTarget
 import nondas.pap.petpal.ui.composable.BackButton
 import nondas.pap.petpal.ui.composable.Field
 import nondas.pap.petpal.ui.composable.FieldLabel
@@ -33,17 +44,56 @@ import nondas.pap.petpal.ui.theme.PetPalTheme
 
 
 @Composable
-fun ForgotPasswordScreen() {
+fun ForgotPasswordScreen(
+    navigateToLoginScreen: () -> Unit,
+    navigateToResetPasswordScreen: () -> Unit,
+    viewModel: ForgotPasswordViewmodel
+) {
+
+    LaunchedEffect(Unit) {
+        viewModel.navigationFlow.collectLatest {
+            navigateToResetPasswordScreen()
+        }
+    }
+
+    val snackBarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(Unit) {
+        viewModel.errorFlow.collect { throwable ->
+            snackBarHostState.showSnackbar(throwable.message ?: "Something went wrong")
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.messageFlow.collect { message ->
+            snackBarHostState.showSnackbar(message)
+        }
+    }
 
 
+    ForgotPasswordContent(
+        onSendLinkButtonClicked = { viewModel.onSendResetLink(it) },
+        onBackButtonClicked = navigateToLoginScreen,
+        snackBarHost = { SnackbarHost(snackBarHostState) }
+    )
 }
 
 
 
 @Composable
-private fun ForgotPasswordContent() {
+private fun ForgotPasswordContent(
+    onSendLinkButtonClicked: (String) -> Unit,
+    onBackButtonClicked: () -> Unit,
+    snackBarHost: @Composable () -> Unit
+) {
 
-    Scaffold {
+    var email by remember { mutableStateOf("") }
+
+    Scaffold(
+        snackbarHost = {
+            snackBarHost()
+        }
+    ) {
         Column(
             modifier = Modifier
                 .padding(it)
@@ -51,7 +101,7 @@ private fun ForgotPasswordContent() {
                 .padding(24.dp)
         ) {
 
-            BackButton(onClick = {})
+            BackButton(onClick = onBackButtonClicked)
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -99,8 +149,8 @@ private fun ForgotPasswordContent() {
             )
 
             Field(
-                value = "",
-                onValueChange = {},
+                value = email,
+                onValueChange = { email = it },
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email
@@ -112,8 +162,9 @@ private fun ForgotPasswordContent() {
             Spacer(modifier = Modifier.height(24.dp))
 
             PrimaryButton(
-                onClick = {},
-                text = stringResource(R.string.send_reset_link)
+                onClick = { onSendLinkButtonClicked(email) },
+                text = stringResource(R.string.send_reset_link),
+                enabled = email.isNotEmpty()
             )
 
         }
@@ -128,6 +179,10 @@ private fun ForgotPasswordContent() {
 @Composable
 private fun ForgotPasswordScreenPreview() {
     PetPalTheme {
-        ForgotPasswordContent()
+        ForgotPasswordContent(
+            onBackButtonClicked = {},
+            onSendLinkButtonClicked = {},
+            snackBarHost = {}
+        )
     }
 }

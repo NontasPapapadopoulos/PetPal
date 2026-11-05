@@ -15,12 +15,14 @@ import nondas.pap.petpal.ui.theme.PetPalShapes
 fun PrimaryButton(
     onClick: () -> Unit,
     text: String,
+    enabled: Boolean = true
 ) {
     Button(
         onClick = onClick,
         modifier = Modifier.fillMaxWidth()
             .height(height = 54.dp),
-        shape = PetPalShapes.medium
+        shape = PetPalShapes.medium,
+        enabled = enabled
     ) {
         Text(
             text = text,
