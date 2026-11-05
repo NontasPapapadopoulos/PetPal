@@ -17,8 +17,10 @@ import androidx.compose.material.icons.outlined.Circle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,6 +31,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.flow.collectLatest
+import nondas.pap.petpal.presentation.ResetPasswordViewmodel
 import nondas.pap.petpal.ui.composable.BackButton
 import nondas.pap.petpal.ui.composable.Field
 import nondas.pap.petpal.ui.composable.FieldLabel
@@ -38,15 +42,45 @@ import nondas.pap.petpal.ui.theme.PetPalTheme
 
 
 @Composable
-fun ResetPasswordScreen() {
+fun ResetPasswordScreen(
+    navigateToHomeScreen: () -> Unit,
+    viewModel: ResetPasswordViewmodel
+) {
 
+    LaunchedEffect(Unit) {
+        viewModel.navigationFlow.collectLatest {
+            navigateToHomeScreen()
+        }
+    }
+
+    val snackBarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(Unit) {
+        viewModel.errorFlow.collect { throwable ->
+            snackBarHostState.showSnackbar(throwable.message ?: "Something went wrong")
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.messageFlow.collect { message ->
+            snackBarHostState.showSnackbar(message)
+        }
+    }
+
+    ResetPasswordScreenContent(
+        onUpdateButtonClicked = { newPassword, confirmPassword -> viewModel.onResetPassword(newPassword, confirmPassword) },
+        onBackButtonClicked = navigateToHomeScreen
+    )
 
 }
 
 
 
 @Composable
-private fun ResetPasswordScreenContent() {
+private fun ResetPasswordScreenContent(
+    onUpdateButtonClicked: (newPassword: String, confirmPassword:String) -> Unit,
+    onBackButtonClicked: () -> Unit
+) {
 
     var newPassword by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
@@ -63,7 +97,7 @@ private fun ResetPasswordScreenContent() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
-                BackButton(onClick = {})
+                BackButton(onClick = onBackButtonClicked)
 
                 Spacer(modifier = Modifier.width(16.dp))
 
@@ -153,7 +187,7 @@ private fun ResetPasswordScreenContent() {
             }
 
             PrimaryButton(
-                onClick = {},
+                onClick = { onUpdateButtonClicked(newPassword, confirmPassword) },
                 text = stringResource(R.string.update_password),
                 enabled = isPasswordValid
             )
@@ -202,6 +236,9 @@ private fun PasswordRule(
 @Composable
 private fun ResetPasswordScreenContentPreview() {
     PetPalTheme() {
-        ResetPasswordScreenContent()
+        ResetPasswordScreenContent(
+            onBackButtonClicked = {},
+            onUpdateButtonClicked = { _, _, -> }
+        )
     }
 }
