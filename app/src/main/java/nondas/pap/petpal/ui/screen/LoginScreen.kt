@@ -1,6 +1,5 @@
 package nondas.pap.petpal.ui.screen
 
-import android.provider.Settings.Global.getString
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -36,6 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.collectLatest
 import nondas.pap.petpal.R
@@ -55,7 +55,7 @@ fun LoginScreen(
     navigateToHome: () -> Unit,
     navigateToForgotPassword: () -> Unit,
     navigateToCreateAccount: () -> Unit,
-    viewModel: LoginViewModel
+    viewModel: LoginViewModel = hiltViewModel()
 ) {
 
     LaunchedEffect(Unit) {

@@ -1,10 +1,15 @@
 package nondas.pap.petpal.data
 
+import com.google.firebase.firestore.FirebaseFirestore
 import nondas.pap.petpal.domain.repository.UserRepository
 
 class UserDataRepository(
-
+    private val firestore: FirebaseFirestore
 ): UserRepository {
+
+    companion object {
+        private const val COLLECTION_NAME = "User"
+    }
 
     override suspend fun login(email: String, password: String) {
         TODO("Not yet implemented")

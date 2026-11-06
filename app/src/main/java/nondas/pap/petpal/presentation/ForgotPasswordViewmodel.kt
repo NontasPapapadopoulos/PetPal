@@ -1,6 +1,11 @@
 package nondas.pap.petpal.presentation
 
-class ForgotPasswordViewmodel(
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+
+
+@HiltViewModel
+class ForgotPasswordViewmodel @Inject constructor(
 
 ): PetPalViewModel<ForgotPasswordNavigationTarget>() {
 

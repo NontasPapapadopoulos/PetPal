@@ -43,7 +43,7 @@ import nondas.pap.petpal.ui.theme.PetPalTheme
 
 
 @Composable
-private fun HomeScreen() {
+fun HomeScreen() {
 
 }
 

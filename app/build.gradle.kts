@@ -1,6 +1,10 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -56,4 +60,29 @@ dependencies {
 
 
     implementation(libs.material.icons.extended)
+
+    // hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+
+    // navigation
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+    implementation(libs.kotlinx.serialization.core)
+    implementation(libs.androidx.material3.adaptive.navigation3)
+    implementation(libs.hilt.navigation.compose)
+
+//    //Firebase
+    implementation(platform(libs.google.firebase.bom))
+    implementation(libs.firebase.analytics)
+//    implementation(libs.google.firebase.auth)
+    implementation(libs.firebase.firestore)
+//
+//    //Authentication with Credential Manager
+//    implementation(libs.play.services.auth)
+//    implementation(libs.androidx.credentials)
+//    implementation(libs.androidx.credentials.play.services.auth)
+//    implementation(libs.googleid)
+
 }

@@ -31,9 +31,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import nondas.pap.petpal.presentation.ForgotPasswordViewmodel
-import nondas.pap.petpal.presentation.RegisterNavigationTarget
 import nondas.pap.petpal.ui.composable.BackButton
 import nondas.pap.petpal.ui.composable.Field
 import nondas.pap.petpal.ui.composable.FieldLabel
@@ -46,7 +46,7 @@ import nondas.pap.petpal.ui.theme.PetPalTheme
 fun ForgotPasswordScreen(
     navigateToLoginScreen: () -> Unit,
     navigateToResetPasswordScreen: () -> Unit,
-    viewModel: ForgotPasswordViewmodel
+    viewModel: ForgotPasswordViewmodel = hiltViewModel()
 ) {
 
     LaunchedEffect(Unit) {

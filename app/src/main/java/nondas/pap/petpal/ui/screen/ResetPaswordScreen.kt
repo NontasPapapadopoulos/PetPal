@@ -39,12 +39,13 @@ import nondas.pap.petpal.ui.composable.FieldLabel
 import nondas.pap.petpal.ui.composable.PrimaryButton
 import nondas.pap.petpal.ui.theme.PetPalShapes
 import nondas.pap.petpal.ui.theme.PetPalTheme
+import androidx.hilt.navigation.compose.hiltViewModel
 
 
 @Composable
 fun ResetPasswordScreen(
     navigateToHomeScreen: () -> Unit,
-    viewModel: ResetPasswordViewmodel
+    viewModel: ResetPasswordViewmodel = hiltViewModel()
 ) {
 
     LaunchedEffect(Unit) {

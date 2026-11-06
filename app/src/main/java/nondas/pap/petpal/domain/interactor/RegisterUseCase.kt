@@ -1,11 +1,13 @@
 package nondas.pap.petpal.domain.interactor
 
 import kotlinx.coroutines.CoroutineDispatcher
+import nondas.pap.petpal.domain.executor.IoDispatcher
 import nondas.pap.petpal.domain.repository.UserRepository
+import javax.inject.Inject
 
-class RegisterUseCase(
+class RegisterUseCase @Inject constructor(
     private val userRepository: UserRepository,
-    private val dispatcher: CoroutineDispatcher
+    @IoDispatcher dispatcher: CoroutineDispatcher
 ): SuspendUseCase<Unit, RegisterUseCase.Params>(dispatcher) {
 
 
