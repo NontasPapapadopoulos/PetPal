@@ -6,12 +6,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import nondas.pap.petpal.domain.interactor.RegisterUseCase
+import nondas.pap.petpal.domain.interactor.user.Register
 import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val registerUseCase: RegisterUseCase
+    private val register: Register
 ) : PetPalViewModel<RegisterNavigationTarget>() {
 
 
@@ -27,7 +27,7 @@ class RegisterViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-            registerUseCase.execute(RegisterUseCase.Params(
+            register.execute(Register.Params(
                 name, email, password, confirmPassword
             )).fold(
                 onSuccess = {

@@ -8,12 +8,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import nondas.pap.petpal.domain.interactor.LoginUseCase
+import nondas.pap.petpal.domain.interactor.user.PerformLogin
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val loginUseCase: LoginUseCase
+    private val loginUseCase: PerformLogin
 ): PetPalViewModel<LoginNavigationTarget>() {
 
     private val _uiState = MutableStateFlow(LoginState())
@@ -22,7 +22,7 @@ class LoginViewModel @Inject constructor(
     fun onLogin(email: String, password: String) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-            loginUseCase.execute(LoginUseCase.Params(email, password))
+            loginUseCase.execute(PerformLogin.Params(email, password))
                 .fold(
                     onSuccess = {
                         _uiState.update { it.copy(isLoading = false) }

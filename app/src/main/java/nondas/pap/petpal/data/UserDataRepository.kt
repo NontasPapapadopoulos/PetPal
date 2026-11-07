@@ -1,25 +1,18 @@
 package nondas.pap.petpal.data
 
 import com.google.firebase.firestore.FirebaseFirestore
+import nondas.pap.petpal.domain.model.NewAccount
 import nondas.pap.petpal.domain.repository.UserRepository
 
 class UserDataRepository(
     private val firestore: FirebaseFirestore
 ): UserRepository {
 
-    companion object {
-        private const val COLLECTION_NAME = "User"
-    }
-
     override suspend fun login(email: String, password: String) {
         TODO("Not yet implemented")
     }
 
-    override suspend fun register(
-        name: String,
-        email: String,
-        password: String
-    ) {
+    override suspend fun register(account: NewAccount) {
         TODO("Not yet implemented")
     }
 
@@ -38,4 +31,14 @@ class UserDataRepository(
     override suspend fun deleteAccount() {
         TODO("Not yet implemented")
     }
+
+    override fun emailExists(email: String): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    companion object {
+        private const val COLLECTION_NAME = "User"
+    }
+
+
 }

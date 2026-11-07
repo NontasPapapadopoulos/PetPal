@@ -1,26 +1,25 @@
-package nondas.pap.petpal.domain.interactor
+package nondas.pap.petpal.domain.interactor.user
 
 import kotlinx.coroutines.CoroutineDispatcher
 import nondas.pap.petpal.domain.executor.IoDispatcher
+import nondas.pap.petpal.domain.interactor.SuspendUseCase
 import nondas.pap.petpal.domain.repository.UserRepository
 import javax.inject.Inject
 
-class RegisterUseCase @Inject constructor(
+class PerformLogin @Inject constructor(
     private val userRepository: UserRepository,
     @IoDispatcher dispatcher: CoroutineDispatcher
-): SuspendUseCase<Unit, RegisterUseCase.Params>(dispatcher) {
+): SuspendUseCase<Unit, PerformLogin.Params>(dispatcher) {
 
 
     override suspend fun invoke(params: Params) {
-        userRepository.register(params.name, params.email, params.password)
+        userRepository.login(params.email, params.password)
     }
 
 
     data class Params(
-        val name: String,
         val email: String,
-        val password: String,
-        val confirmPassword: String,
+        val password: String
     )
 }
 

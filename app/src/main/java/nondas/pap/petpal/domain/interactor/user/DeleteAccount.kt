@@ -1,14 +1,15 @@
-package nondas.pap.petpal.domain.interactor
+package nondas.pap.petpal.domain.interactor.user
 
 import kotlinx.coroutines.CoroutineDispatcher
 import nondas.pap.petpal.domain.executor.IoDispatcher
+import nondas.pap.petpal.domain.interactor.SuspendUseCase
 import nondas.pap.petpal.domain.repository.UserRepository
 import javax.inject.Inject
 
-class LoginUseCase @Inject constructor(
+class DeleteAccount @Inject constructor(
     private val userRepository: UserRepository,
     @IoDispatcher dispatcher: CoroutineDispatcher
-): SuspendUseCase<Unit, LoginUseCase.Params>(dispatcher) {
+): SuspendUseCase<Unit, DeleteAccount.Params>(dispatcher) {
 
 
     override suspend fun invoke(params: Params) {

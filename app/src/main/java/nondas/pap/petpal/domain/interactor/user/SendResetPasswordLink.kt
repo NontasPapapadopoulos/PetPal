@@ -1,7 +1,8 @@
-package nondas.pap.petpal.domain.interactor
+package nondas.pap.petpal.domain.interactor.user
 
 import kotlinx.coroutines.CoroutineDispatcher
 import nondas.pap.petpal.domain.executor.IoDispatcher
+import nondas.pap.petpal.domain.interactor.SuspendUseCase
 import nondas.pap.petpal.domain.repository.UserRepository
 import javax.inject.Inject
 
@@ -12,6 +13,7 @@ class SendResetPasswordLink @Inject constructor(
 
     override suspend fun invoke(params: Params) {
         // check first if email is registered.
+        userRepository.emailExists(params.email)
         userRepository.sendResetLink(params.email)
     }
 
