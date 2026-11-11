@@ -13,11 +13,12 @@ class ResetPassword @Inject constructor(
 
 
     override suspend fun invoke(params: Params) {
-        userRepository.changePassword(params.confirmPassword)
+        userRepository.changePassword(params.oldPassword, params.confirmPassword)
     }
 
 
     data class Params(
+        val oldPassword: String,
         val password: String,
         val confirmPassword: String
     )

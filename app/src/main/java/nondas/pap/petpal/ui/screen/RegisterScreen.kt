@@ -22,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -46,7 +47,6 @@ fun RegisterScreen(
     navigateToHomeScreen: () -> Unit,
     viewModel: RegisterViewModel = hiltViewModel()
 ) {
-
 
     LaunchedEffect(Unit) {
         viewModel.navigationFlow.collectLatest { target ->
@@ -78,11 +78,9 @@ fun RegisterScreen(
         onBackButtonClicked = navigateToLoginScreen,
         snackBarHost = { SnackbarHost(snackBarHostState) }
     )
-
-
-
-
 }
+
+
 
 @Composable
 private fun RegisterScreenContent(
@@ -175,6 +173,7 @@ private fun RegisterScreenContent(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password
                 ),
+                visualTransformation = PasswordVisualTransformation(),
                 placeholder = stringResource(R.string.at_least_eight)
             )
 
@@ -192,6 +191,7 @@ private fun RegisterScreenContent(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password
                 ),
+                visualTransformation = PasswordVisualTransformation(),
                 placeholder = stringResource(R.string.repeat_password)
             )
 

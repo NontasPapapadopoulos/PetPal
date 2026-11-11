@@ -1,9 +1,7 @@
 package nondas.pap.petpal.domain.model
 
 data class User(
-    val id: String,
-    val name: String,
+    val fullName: String,
     val email: String,
-    val pets: List<Pet>,
-
+    val password: String?
 )

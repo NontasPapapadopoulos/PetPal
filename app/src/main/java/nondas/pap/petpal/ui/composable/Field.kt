@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import nondas.pap.petpal.ui.theme.PetPalTheme
@@ -28,6 +29,7 @@ fun Field(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     placeholder: String = "",
     readOnly: Boolean = false,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
     modifier: Modifier = Modifier
 ) {
 
@@ -50,6 +52,7 @@ fun Field(
             focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
             unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
         ),
+        visualTransformation = visualTransformation,
         readOnly = readOnly,
         modifier = modifier.fillMaxWidth()
             .height(52.dp),

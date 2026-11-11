@@ -4,7 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import nondas.pap.petpal.domain.PasswordsDoNotMatchException
 import nondas.pap.petpal.domain.executor.IoDispatcher
 import nondas.pap.petpal.domain.interactor.SuspendUseCase
-import nondas.pap.petpal.domain.model.NewAccount
+import nondas.pap.petpal.domain.model.User
 import nondas.pap.petpal.domain.repository.UserRepository
 import javax.inject.Inject
 
@@ -18,7 +18,7 @@ class Register @Inject constructor(
         if (params.password != params.confirmPassword)
             throw PasswordsDoNotMatchException
 
-        val newAccount = NewAccount(
+        val newAccount = User(
             fullName = params.name,
             email = params.email,
             password = params.password

@@ -13,7 +13,6 @@ class SendResetPasswordLink @Inject constructor(
 
     override suspend fun invoke(params: Params) {
         // check first if email is registered.
-        userRepository.emailExists(params.email)
         userRepository.sendResetLink(params.email)
     }
 

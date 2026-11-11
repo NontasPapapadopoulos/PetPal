@@ -1,13 +1,12 @@
 package nondas.pap.petpal.domain.repository
 
-import nondas.pap.petpal.domain.model.NewAccount
+import nondas.pap.petpal.domain.model.User
 
 interface UserRepository {
     suspend fun login(email: String, password: String)
-    suspend fun register(account: NewAccount)
-    suspend fun changePassword(newPassword: String)
+    suspend fun register(user: User)
+    suspend fun changePassword(oldPassword: String, newPassword: String)
     suspend fun sendResetLink(email: String)
-    suspend fun signOut()
-    suspend fun deleteAccount()
-    fun emailExists(email: String): Boolean
+    fun signOut()
+    suspend fun deleteAccount(password: String)
 }

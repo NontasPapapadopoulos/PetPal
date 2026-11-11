@@ -1,6 +1,7 @@
 [versions]
 credentials = "1.6.0"
 firebaseBom = "35.1.0"
+firebaseFirestoreKtx = "25.1.4"
 googleid = "1.2.1"
 hilt = "2.60.1"
 hilt-androidx = "1.4.0"
@@ -71,6 +72,7 @@ firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 google-firebase-auth = { module = "com.google.firebase:firebase-auth" }
 google-firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
+firebase-firestore-ktx = { module = "com.google.firebase:firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
 
 
 androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
