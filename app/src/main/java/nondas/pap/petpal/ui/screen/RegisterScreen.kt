@@ -61,12 +61,6 @@ fun RegisterScreen(
 
 
     LaunchedEffect(Unit) {
-        viewModel.errorFlow.collect { throwable ->
-            snackBarHostState.showSnackbar(throwable.message ?: "Something went wrong")
-        }
-    }
-
-    LaunchedEffect(Unit) {
         viewModel.messageFlow.collect { message ->
             snackBarHostState.showSnackbar(message)
         }

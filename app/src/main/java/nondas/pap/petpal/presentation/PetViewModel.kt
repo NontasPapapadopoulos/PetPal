@@ -1,5 +1,10 @@
 package nondas.pap.petpal.presentation
 
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class PetViewModel() : ViewModel()
+@HiltViewModel
+class PetViewModel @Inject constructor(
+
+) : ViewModel()

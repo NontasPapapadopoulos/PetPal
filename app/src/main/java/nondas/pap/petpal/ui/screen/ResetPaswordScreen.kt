@@ -56,11 +56,6 @@ fun ResetPasswordScreen(
 
     val snackBarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(Unit) {
-        viewModel.errorFlow.collect { throwable ->
-            snackBarHostState.showSnackbar(throwable.message ?: "Something went wrong")
-        }
-    }
 
     LaunchedEffect(Unit) {
         viewModel.messageFlow.collect { message ->

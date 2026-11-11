@@ -1,9 +1,12 @@
 package nondas.pap.petpal.presentation
 
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -14,10 +17,13 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: PerformLogin
-): PetPalViewModel<LoginNavigationTarget>() {
+): ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginState())
     val uiState: StateFlow<LoginState> = _uiState.asStateFlow()
+
+    private val _navigationFlow = MutableSharedFlow<Unit>()
+    val navigationFlow: SharedFlow<Unit> = _navigationFlow
 
     fun onLogin(email: String, password: String) {
         viewModelScope.launch {
@@ -26,12 +32,10 @@ class LoginViewModel @Inject constructor(
                 .fold(
                     onSuccess = {
                         _uiState.update { it.copy(isLoading = false) }
-                        navigateTo(LoginNavigationTarget.Home)
+                        _navigationFlow.emit(Unit)
                     },
                     onFailure = { throwable ->
-                        addError(throwable)
-                        _uiState.update { it.copy(isLoading = false) }
-//                        _uiState.update { it.copy(isLoading = false, error = throwable.message) }
+                        _uiState.update { it.copy(isLoading = false, error = throwable.message) }
                     }
                 )
         }
@@ -44,6 +48,11 @@ class LoginViewModel @Inject constructor(
 
 }
 
+sealed interface LoginEvent {
+    object onLogin: LoginEvent
+}
+
+
 data class LoginState(
     val isLoading: Boolean = false,
     val error: String? = null
@@ -51,7 +60,3 @@ data class LoginState(
 
 }
 
-
-enum class LoginNavigationTarget {
-    Home
-}

@@ -66,11 +66,6 @@ fun LoginScreen(
 
     val snackBarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(Unit) {
-        viewModel.errorFlow.collectLatest { throwable ->
-            snackBarHostState.showSnackbar(throwable.message ?: "Something went wrong")
-        }
-    }
 
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 

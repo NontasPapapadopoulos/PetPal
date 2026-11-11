@@ -1,8 +1,11 @@
 package nondas.pap.petpal.presentation
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -12,12 +15,16 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val register: Register
-) : PetPalViewModel<RegisterNavigationTarget>() {
-
+): ViewModel() {
 
     private val _uiState = MutableStateFlow(RegisterState())
     val uiState: StateFlow<RegisterState> = _uiState
 
+    private val _navigationFlow = MutableSharedFlow<RegisterNavigationTarget>()
+    val navigationFlow: SharedFlow<RegisterNavigationTarget> = _navigationFlow
+
+    private val _messageFlow = MutableSharedFlow<String>()
+    val messageFlow: SharedFlow<String> = _messageFlow
 
     fun onCreateAccount(
         name: String,
@@ -31,11 +38,11 @@ class RegisterViewModel @Inject constructor(
                 name, email, password, confirmPassword
             )).fold(
                 onSuccess = {
-                    showMessage("Account Created!")
-                    navigateTo(RegisterNavigationTarget.Login)
+                    _messageFlow.emit("Account Created!")
+                    _navigationFlow.emit(RegisterNavigationTarget.Login)
                 },
                 onFailure = {
-                    addError(it)
+                    _messageFlow.emit(it.message?: "Something went wrong")
                     _uiState.update { it.copy(isLoading = false) }
                 }
             )
@@ -45,6 +52,7 @@ class RegisterViewModel @Inject constructor(
     fun onCreateWithGoogle() {}
 
 }
+
 
 
 data class RegisterState(
