@@ -2,6 +2,7 @@ package nondas.pap.petpal.data
 
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import nondas.pap.petpal.domain.model.User
@@ -25,6 +26,27 @@ class UserDataRepository(
             .await()
             .toObject(User::class.java)
 
+    }
+
+    override suspend fun loginWithGoogle(idToken: String) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        val authResult = FirebaseAuth.getInstance()
+            .signInWithCredential(credential)
+            .await()
+
+        val isNewUser = authResult.additionalUserInfo?.isNewUser ?: false
+
+        if (isNewUser) {
+            val user = authResult.user!!
+            firestore.collection(COLLECTION_NAME).document(user.uid)
+                .set(
+                    User(
+                        fullName = user.displayName ?: "",
+                        email = user.email ?: ""
+                    )
+                )
+                .await()
+        }
     }
 
     override suspend fun register(user: User) {

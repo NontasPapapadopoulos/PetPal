@@ -11,12 +11,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import nondas.pap.petpal.domain.interactor.user.LoginWithGoogle
 import nondas.pap.petpal.domain.interactor.user.PerformLogin
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val loginUseCase: PerformLogin
+    private val loginUseCase: PerformLogin,
+    private val loginWithGoogle: LoginWithGoogle
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginState())
@@ -41,8 +43,16 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun onLoginWithGoogle() {
-
+    fun onLoginWithGoogle(idToken: String) {
+        viewModelScope.launch {
+            loginWithGoogle.execute(LoginWithGoogle.Params(idToken))
+                .fold(
+                    onSuccess = {
+                        _navigationFlow.emit(Unit)
+                    },
+                    onFailure = { }
+                )
+        }
     }
 
 

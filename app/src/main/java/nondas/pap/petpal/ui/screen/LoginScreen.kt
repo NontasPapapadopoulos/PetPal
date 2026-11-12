@@ -1,5 +1,10 @@
 package nondas.pap.petpal.ui.screen
 
+import android.app.Activity
+import android.content.Context
+import android.credentials.GetCredentialException
+import android.util.Log
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,16 +33,21 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.credentials.Credential
+import androidx.credentials.CredentialManager
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import kotlinx.coroutines.flow.collectLatest
 import nondas.pap.petpal.R
 import nondas.pap.petpal.presentation.LoginState
@@ -49,6 +59,11 @@ import nondas.pap.petpal.ui.composable.LoadingBox
 import nondas.pap.petpal.ui.composable.PrimaryButton
 import nondas.pap.petpal.ui.composable.SecondaryButton
 import nondas.pap.petpal.ui.theme.PetPalTheme
+import androidx.credentials.GetCredentialRequest
+import androidx.credentials.exceptions.NoCredentialException
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -70,11 +85,23 @@ fun LoginScreen(
 
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
 
     LoginContent(
         state = state,
         onLogin = { email, password -> viewModel.onLogin(email, password) },
-        onContinueWithGoogleClicked = { viewModel.onLoginWithGoogle() },
+        onContinueWithGoogleClicked = {
+            coroutineScope.launch {
+                launchCredential(
+                    context = context,
+                    onRequestResult = { viewModel.onLoginWithGoogle(it) }
+
+                )
+            }
+
+
+        },
         onForgotPasswordClicked = navigateToForgotPassword,
         onCreateAccountClicked = navigateToCreateAccount,
         snackBarHost = { SnackbarHost(snackBarHostState) }
@@ -126,7 +153,6 @@ private fun LoginContent(
             Text(
                 text = stringResource(R.string.app_name),
                 style = MaterialTheme.typography.headlineMedium,
-
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -266,6 +292,37 @@ private fun LoginContent(
     }
 }
 
+private suspend fun launchCredential(
+    context: Context,
+    onRequestResult: (String) -> Unit
+) {
+    try {
+        val signInWithGoogleOption = GetSignInWithGoogleOption
+            .Builder(serverClientId = context.getString(R.string.default_web_client_id))
+            .build()
+
+        // TODO: find and place the web_client_id on the values.xml file.
+
+        val request = GetCredentialRequest.Builder()
+            .addCredentialOption(signInWithGoogleOption)
+            .build()
+
+        val result = CredentialManager.create(context).getCredential(
+            request = request,
+            context = context
+        )
+
+        val googleIdToken = GoogleIdTokenCredential
+            .createFrom(result.credential.data).idToken
+
+        onRequestResult(googleIdToken)
+
+    } catch (e: NoCredentialException) {
+        Log.d("ERROR", e.message.orEmpty())
+    } catch (e: androidx.credentials.exceptions.GetCredentialException) {
+
+    }
+}
 
 
 @Composable
