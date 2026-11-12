@@ -96,11 +96,8 @@ fun LoginScreen(
                 launchCredential(
                     context = context,
                     onRequestResult = { viewModel.onLoginWithGoogle(it) }
-
                 )
             }
-
-
         },
         onForgotPasswordClicked = navigateToForgotPassword,
         onCreateAccountClicked = navigateToCreateAccount,
@@ -301,7 +298,6 @@ private suspend fun launchCredential(
             .Builder(serverClientId = context.getString(R.string.default_web_client_id))
             .build()
 
-        // TODO: find and place the web_client_id on the values.xml file.
 
         val request = GetCredentialRequest.Builder()
             .addCredentialOption(signInWithGoogleOption)

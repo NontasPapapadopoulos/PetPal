@@ -12,7 +12,12 @@
           "package_name": "nondas.pap.petpal"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "312294420580-9bqr6pclladaqdkaoe5tmrr67aa4maft.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyB-UKWHstntrGwA91HjqeAAAJMQZZ5UE3A"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "312294420580-9bqr6pclladaqdkaoe5tmrr67aa4maft.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
