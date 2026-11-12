@@ -4,6 +4,9 @@ import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.snapshots
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
 import nondas.pap.petpal.domain.model.User
 import nondas.pap.petpal.domain.repository.UserRepository
@@ -12,19 +15,24 @@ class UserDataRepository(
     private val firestore: FirebaseFirestore
 ): UserRepository {
 
+
+    override fun get(): Flow<User> {
+        val user = FirebaseAuth.getInstance().currentUser
+            ?: throw IllegalStateException("Not authenticated")
+
+
+        return firestore.collection(COLLECTION_NAME)
+            .document(user.uid)
+            .snapshots()
+            .map { it.toObject(User::class.java) ?: throw IllegalStateException("User not found") }
+    }
+
     override suspend fun login(email: String, password: String) {
         val auth = FirebaseAuth.getInstance()
 
         val authResult = auth
             .signInWithEmailAndPassword(email, password)
             .await()
-
-
-        firestore.collection(COLLECTION_NAME)
-            .document(authResult.user!!.uid)
-            .get()
-            .await()
-            .toObject(User::class.java)
 
     }
 

@@ -1,6 +1,7 @@
 package nondas.pap.petpal.ui.composable
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,6 +23,8 @@ import nondas.pap.petpal.ui.theme.PetPalTheme
 fun SelectionRow(
     firstSelectionText: String,
     secondSelectionText: String,
+    onFirstSelectionClicked: () -> Unit,
+    onSecondSelectionClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -39,12 +42,14 @@ fun SelectionRow(
             selection = firstSelectionText,
             isSelected = false,
             modifier = Modifier.weight(1f)
+                .clickable { onFirstSelectionClicked() }
         )
 
         SelectionItem(
             selection = secondSelectionText,
             isSelected = true,
             modifier = Modifier.weight(1f)
+                .clickable { onSecondSelectionClicked() }
         )
 
     }
@@ -84,6 +89,8 @@ private fun SelectionRowPreview() {
         SelectionRow(
             firstSelectionText = stringResource(R.string.male),
             secondSelectionText = stringResource(R.string.female),
+            onSecondSelectionClicked = {},
+            onFirstSelectionClicked = {}
         )
     }
 }

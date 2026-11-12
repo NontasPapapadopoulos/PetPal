@@ -81,6 +81,8 @@ private fun MedicineContent() {
             SelectionRow(
                 firstSelectionText = stringResource(R.string.schedule_reminder),
                 secondSelectionText = stringResource(R.string.log_past_dose),
+                onFirstSelectionClicked = {},
+                onSecondSelectionClicked = {}
             )
 
             Spacer(modifier = Modifier.height(16.dp))

@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
+import nondas.pap.petpal.presentation.Mode
 import nondas.pap.petpal.ui.screen.AddPetScreen
 import nondas.pap.petpal.ui.screen.ForgotPasswordScreen
 import nondas.pap.petpal.ui.screen.HomeScreen
@@ -44,7 +45,12 @@ fun Navigation() {
 
                 is Home ->
                     NavEntry(key = route) {
-                        HomeScreen()
+                        HomeScreen(
+                            navigateToSettings = { backStack.add(Settings) },
+                            navigateToAddPet = { backStack.add(AddPet) },
+                            navigateToPet = { backStack.add(Pet) },
+                            navigateToNotifications = { backStack.add(Notifications) },
+                        )
                     }
 
                 is Settings ->
@@ -69,12 +75,19 @@ fun Navigation() {
 
                 is Pet ->
                     NavEntry(key = route) {
-                        PetScreen()
+                        PetScreen(
+                            navigateBack = { backStack.removeLastOrNull() },
+                            navigateToMedicine = { backStack.add(Medicine) },
+                            navigateToEditPet = { backStack.add(AddPet) }
+                        )
                     }
 
                 is AddPet ->
                     NavEntry(key = route) {
-                        AddPetScreen()
+                        AddPetScreen(
+                            navigateBack = { backStack.removeLastOrNull() },
+                            mode = Mode.Add,
+                        )
                     }
 
                 is Medicine ->

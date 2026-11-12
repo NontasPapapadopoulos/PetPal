@@ -4,8 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import nondas.pap.petpal.domain.model.Settings
 
 interface SettingsRepository {
-    suspend fun get(): Flow<Settings>
-    suspend fun togglePushNotifications()
-    suspend fun setTheme()
+    fun get(): Flow<Settings>
+    suspend fun update(settings: Settings)
 
 }

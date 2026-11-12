@@ -17,6 +17,10 @@ object Home: NavKey
 
 
 @Serializable
+object Notifications: NavKey
+
+
+@Serializable
 object Settings: NavKey
 
 

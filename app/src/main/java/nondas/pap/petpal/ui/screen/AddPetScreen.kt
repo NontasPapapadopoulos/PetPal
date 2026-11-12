@@ -2,6 +2,7 @@ package nondas.pap.petpal.ui.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CameraAlt
@@ -21,29 +23,59 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.OffsetMapping
+import androidx.compose.ui.text.input.TransformedText
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import nondas.pap.petpal.ui.composable.BackButton
 import nondas.pap.petpal.R
+import nondas.pap.petpal.domain.model.enums.Sex
+import nondas.pap.petpal.domain.model.enums.Specie
 import nondas.pap.petpal.ui.composable.Field
 import nondas.pap.petpal.ui.composable.FieldLabel
 import nondas.pap.petpal.ui.composable.PrimaryButton
 import nondas.pap.petpal.ui.composable.SelectionRow
+import nondas.pap.petpal.presentation.Mode
 import nondas.pap.petpal.ui.theme.PetPalShapes
 import nondas.pap.petpal.ui.theme.PetPalTheme
 
 @Composable
-fun AddPetScreen() {
+fun AddPetScreen(
+    navigateBack: () -> Unit,
+    mode: Mode
+) {
+
+
+
 
 }
 
 
 @Composable
-private fun AddPetContent() {
+private fun AddPetContent(
+    onBackClicked: () -> Unit,
+    onSavePetClicked: () -> Unit
+) {
+
+    var name by remember { mutableStateOf("") }
+    var breed by remember { mutableStateOf("") }
+    var weight by remember { mutableStateOf("") }
+    var birthday by remember { mutableStateOf("") }
+    var microChip by remember { mutableStateOf("") }
+    var sex by remember { mutableStateOf(Sex.Male) }
+    var specie by remember { mutableStateOf(Specie.Dog) }
+
 
     Scaffold {
         Column(
@@ -58,7 +90,7 @@ private fun AddPetContent() {
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                BackButton({})
+                BackButton(onClick = onBackClicked)
 
                 Spacer(modifier = Modifier.width(16.dp))
 
@@ -84,6 +116,10 @@ private fun AddPetContent() {
                         shape = PetPalShapes.extraLarge
                     ),
             ) {
+//                AsyncImage(
+//                    model = pet.photoUrl,
+//                    contentDescription = pet.name
+//                )
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -112,8 +148,8 @@ private fun AddPetContent() {
 
 
             Field(
-                value = "",
-                onValueChange = {},
+                value = name,
+                onValueChange = { name = it },
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = "Roza"
             )
@@ -125,30 +161,33 @@ private fun AddPetContent() {
                 text = stringResource(R.string.species),
             )
 
-
             Row {
                 SpecieItem(
-                    specie = stringResource(R.string.dog),
-                    isSelected = true,
-                    modifier = Modifier.weight(1f)
+                    specie = Specie.Dog,
+                    selectedSpecie = specie,
+                    modifier = Modifier.weight(1f),
+                    onClick = { specie = it }
                 )
 
                 SpecieItem(
-                    specie = stringResource(R.string.cat),
-                    isSelected = false,
-                    modifier = Modifier.weight(1f)
+                    specie = Specie.Cat,
+                    selectedSpecie = specie,
+                    modifier = Modifier.weight(1f),
+                    onClick = { specie = it }
                 )
 
                 SpecieItem(
-                    specie = stringResource(R.string.bird),
-                    isSelected = false,
-                    modifier = Modifier.weight(1f)
+                    specie = Specie.Bird,
+                    selectedSpecie = specie,
+                    modifier = Modifier.weight(1f),
+                    onClick = { specie = it }
                 )
 
                 SpecieItem(
-                    specie = stringResource(R.string.other),
-                    isSelected = false,
-                    modifier = Modifier.weight(1f)
+                    specie = Specie.Other,
+                    selectedSpecie = specie,
+                    modifier = Modifier.weight(1f),
+                    onClick = { specie = it }
                 )
 
 
@@ -163,8 +202,8 @@ private fun AddPetContent() {
 
 
             Field(
-                value = "",
-                onValueChange = {},
+                value = breed,
+                onValueChange = { breed = it },
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = "Frenchton"
             )
@@ -180,10 +219,17 @@ private fun AddPetContent() {
                     )
 
                     Field(
-                        value = "",
-                        onValueChange = {},
-                        placeholder = "DD / MM / YYYY"
-                    )
+                        value = birthday,
+                        onValueChange = {
+                            if (it.length <= 8 && it.all { c -> c.isDigit() })
+                                birthday = it
+                        },
+                        placeholder = "DD / MM / YYYY",
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number
+                        ),
+                        visualTransformation = DateVisualTransformation,
+                        )
                 }
 
                 Spacer(modifier = Modifier.width(8.dp))
@@ -195,9 +241,12 @@ private fun AddPetContent() {
 
 
                     Field(
-                        value = "",
-                        onValueChange = {},
-                        placeholder = "10 kg"
+                        value = weight,
+                        onValueChange = { weight = it },
+                        placeholder = "10 kg",
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number
+                        ),
                     )
                 }
 
@@ -213,7 +262,9 @@ private fun AddPetContent() {
 
             SelectionRow(
                 firstSelectionText = "Male",
-                secondSelectionText = "Female"
+                secondSelectionText = "Female",
+                onFirstSelectionClicked = { sex = Sex.Male },
+                onSecondSelectionClicked = { sex = Sex.Female }
             )
 
 
@@ -224,13 +275,14 @@ private fun AddPetContent() {
                 text = stringResource(R.string.microchip),
             )
 
-            Spacer(modifier = Modifier.height(4.dp))
-
 
             Field(
-                value = "",
-                onValueChange = {},
-                placeholder = "15 Digits"
+                value = microChip,
+                onValueChange = { microChip = it },
+                placeholder = "15 Digits",
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number
+                ),
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -240,7 +292,7 @@ private fun AddPetContent() {
 
 
             PrimaryButton(
-                onClick = {},
+                onClick = onSavePetClicked,
                 text = stringResource(R.string.save_pet)
             )
 
@@ -252,19 +304,23 @@ private fun AddPetContent() {
 
 @Composable
 private fun SpecieItem(
-    specie: String,
-    isSelected: Boolean,
-    modifier: Modifier = Modifier
+    specie: Specie,
+    selectedSpecie: Specie,
+    modifier: Modifier = Modifier,
+    onClick: (Specie) -> Unit
 ) {
+
+    val isSelected = specie == selectedSpecie
 
     val textColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
     val borderColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f)
     val backgroundColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerLowest
     Text(
-        text = specie,
+        text = specie.name,
         color = textColor,
         textAlign = TextAlign.Center,
         modifier = modifier
+            .clickable { onClick(specie) }
             .padding(horizontal = 4.dp)
             .background(
                 color = backgroundColor,
@@ -285,6 +341,38 @@ private fun SpecieItem(
 @Preview
 private fun AddPetContentPreview() {
     PetPalTheme(darkTheme = false) {
-        AddPetContent()
+        AddPetContent(
+            onSavePetClicked = {},
+            onBackClicked = {}
+        )
+    }
+}
+
+
+object DateVisualTransformation : VisualTransformation {
+    override fun filter(text: AnnotatedString): TransformedText {
+        val trimmed = text.text.take(8)
+        var output = ""
+        for (i in trimmed.indices) {
+            output += trimmed[i]
+            if (i == 1 || i == 3) output += " / "
+        }
+        return TransformedText(
+            AnnotatedString(output),
+            object : OffsetMapping {
+                override fun originalToTransformed(offset: Int): Int =
+                    when {
+                        offset <= 2 -> offset
+                        offset <= 4 -> offset + 3
+                        else -> offset + 6
+                    }
+                override fun transformedToOriginal(offset: Int): Int =
+                    when {
+                        offset <= 2 -> offset
+                        offset <= 5 -> offset - 3
+                        else -> offset - 6
+                    }
+            }
+        )
     }
 }

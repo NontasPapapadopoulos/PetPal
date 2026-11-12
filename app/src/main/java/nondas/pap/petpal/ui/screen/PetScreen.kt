@@ -37,8 +37,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import nondas.pap.petpal.ui.composable.BackButton
 import nondas.pap.petpal.R
+import nondas.pap.petpal.presentation.PetViewModel
 import nondas.pap.petpal.ui.composable.ChoiceItem
 import nondas.pap.petpal.ui.composable.SelectionRow
 import nondas.pap.petpal.ui.theme.PetPalShapes
@@ -46,17 +48,27 @@ import nondas.pap.petpal.ui.theme.PetPalTheme
 
 
 @Composable
-fun PetScreen() {
+fun PetScreen(
+    navigateBack: () -> Unit,
+    navigateToMedicine: () -> Unit,
+    navigateToEditPet: () -> Unit,
+    viewModel: PetViewModel = hiltViewModel()
+
+) {
 
 }
 
 
 @Composable
-private fun PetContent() {
+private fun PetContent(
+    onNavigateBack: () -> Unit,
+    onEditClicked: () -> Unit,
+    onAddMedicineClicked: () -> Unit
+) {
     Scaffold(
         floatingActionButton = {
             Button(
-                onClick = {},
+                onClick = onAddMedicineClicked,
                 colors = ButtonDefaults.buttonColors().copy(
                     containerColor = MaterialTheme.colorScheme.secondary
                 ),
@@ -97,10 +109,10 @@ private fun PetContent() {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    BackButton {  }
+                    BackButton { onNavigateBack() }
 
                     Button(
-                        onClick = {},
+                        onClick = onEditClicked,
                         colors = ButtonDefaults.buttonColors().copy(
                             containerColor = MaterialTheme.colorScheme.outlineVariant
                         ),
@@ -127,7 +139,9 @@ private fun PetContent() {
             SelectionRow(
                 firstSelectionText = stringResource(R.string.male),
                 secondSelectionText = stringResource(R.string.female),
-                modifier = Modifier.padding(horizontal = 24.dp)
+                modifier = Modifier.padding(horizontal = 24.dp),
+                onFirstSelectionClicked = {},
+                onSecondSelectionClicked = {}
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -350,6 +364,10 @@ private fun MedicineItem(
 @Composable
 private fun PetContentContent() {
     PetPalTheme {
-        PetContent()
+        PetContent(
+            onNavigateBack = {},
+            onEditClicked = {},
+            onAddMedicineClicked = {}
+        )
     }
 }

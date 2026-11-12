@@ -1,10 +1,7 @@
 package nondas.pap.petpal.ui.screen
 
-import android.app.Activity
 import android.content.Context
-import android.credentials.GetCredentialException
 import android.util.Log
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -43,7 +40,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.credentials.Credential
 import androidx.credentials.CredentialManager
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -61,7 +57,6 @@ import nondas.pap.petpal.ui.composable.SecondaryButton
 import nondas.pap.petpal.ui.theme.PetPalTheme
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.exceptions.NoCredentialException
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import kotlinx.coroutines.launch
 

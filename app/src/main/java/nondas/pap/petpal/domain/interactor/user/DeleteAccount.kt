@@ -13,12 +13,11 @@ class DeleteAccount @Inject constructor(
 
 
     override suspend fun invoke(params: Params) {
-        userRepository.login(params.email, params.password)
+        userRepository.deleteAccount(params.password)
     }
 
 
     data class Params(
-        val email: String,
         val password: String
     )
 }

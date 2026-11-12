@@ -1,8 +1,10 @@
 package nondas.pap.petpal.domain.repository
 
+import kotlinx.coroutines.flow.Flow
 import nondas.pap.petpal.domain.model.User
 
 interface UserRepository {
+    fun get(): Flow<User>
     suspend fun login(email: String, password: String)
     suspend fun loginWithGoogle(idToken: String)
     suspend fun register(user: User)

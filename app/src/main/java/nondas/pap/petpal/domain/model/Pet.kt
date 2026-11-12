@@ -12,4 +12,5 @@ data class Pet(
     val specie: Specie,
     val breed: String,
     val microchipNumber: String,
+    val photoUrl: String? = null
 )

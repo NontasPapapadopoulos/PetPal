@@ -95,4 +95,7 @@ before choosing a new one.</string>
     <string name="your_name">Your name</string>
     <string name="repeat_password">Repeat password</string>
     <string name="something_went_wrong">Something went wrong</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+
 </resources>
