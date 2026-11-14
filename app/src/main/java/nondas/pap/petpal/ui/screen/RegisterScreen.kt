@@ -18,8 +18,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -28,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import nondas.pap.petpal.presentation.RegisterNavigationTarget
 import nondas.pap.petpal.presentation.RegisterState
 import nondas.pap.petpal.presentation.RegisterViewModel
@@ -69,12 +72,22 @@ fun RegisterScreen(
 
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+
     RegisterScreenContent(
         state = state,
         onCreateAccountClicked = { name, email, password, confirmPassword ->
             viewModel.onCreateAccount(name, email, password, confirmPassword)
         },
-        onContinueWithGoogleClicked = { viewModel.onCreateWithGoogle() },
+        onContinueWithGoogleClicked = {
+            coroutineScope.launch {
+                launchCredential(
+                    context = context,
+                    onRequestResult = { viewModel.onCreateWithGoogle(it) }
+                )
+            }
+        },
         onBackButtonClicked = navigateToLoginScreen,
         snackBarHost = { SnackbarHost(snackBarHostState) }
     )

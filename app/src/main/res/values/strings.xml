@@ -85,7 +85,7 @@ before choosing a new one.</string>
     <string name="push_notifications">Push notifications</string>
     <string name="default_reminder">Default reminder</string>
     <string name="reminder_time">Reminder time</string>
-    <string name="theme">Theme</string>
+    <string name="theme">Dark theme</string>
     <string name="export">Export health book</string>
     <string name="pdf">PDF for your vet</string>
     <string name="sign_out">Sign out</string>

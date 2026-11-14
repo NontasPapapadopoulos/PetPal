@@ -25,6 +25,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -32,6 +36,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import nondas.pap.petpal.ui.composable.BackButton
 import nondas.pap.petpal.R
+import nondas.pap.petpal.domain.model.enums.MedicineType
+import nondas.pap.petpal.domain.model.enums.Repeat
 import nondas.pap.petpal.ui.composable.Badge
 import nondas.pap.petpal.ui.composable.ChoiceItem
 import nondas.pap.petpal.ui.composable.Field
@@ -60,6 +66,10 @@ private fun MedicineContent() {
 
         ) {
 
+            var selectedRepeat by remember { mutableStateOf(Repeat.Once) }
+            var selectedTab by remember { mutableStateOf(Tab.ScheduleReminder) }
+            var selectedMedicine by remember { mutableStateOf(MedicineType.Vaccine) }
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
@@ -79,10 +89,11 @@ private fun MedicineContent() {
             Spacer(modifier = Modifier.height(24.dp))
 
             SelectionRow(
-                firstSelectionText = stringResource(R.string.schedule_reminder),
-                secondSelectionText = stringResource(R.string.log_past_dose),
-                onFirstSelectionClicked = {},
-                onSecondSelectionClicked = {}
+                firstOption = Tab.ScheduleReminder,
+                secondOption = Tab.LogPastDose,
+                selected = selectedTab,
+                onFirstSelected = { selectedTab = Tab.ScheduleReminder },
+                onSecondSelected = { selectedTab = Tab.LogPastDose }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -108,25 +119,13 @@ private fun MedicineContent() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                MedicineItem(
-                    name = stringResource(R.string.vaccine),
-                    isSelected = true
-                )
 
-                MedicineItem(
-                    name = stringResource(R.string.pill),
-                    isSelected = false
-                )
-
-                MedicineItem(
-                    name = stringResource(R.string.treatment),
-                    isSelected = false
-                )
-
-                MedicineItem(
-                    name = stringResource(R.string.other),
-                    isSelected = false
-                )
+                MedicineType.entries.forEach {
+                    MedicineItem(
+                        name = it.name,
+                        isSelected = it == selectedMedicine
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -179,33 +178,16 @@ private fun MedicineContent() {
                 text = stringResource(R.string.repeats)
             )
 
-            FlowRow() {
-                ChoiceItem(
-                    choice = stringResource(R.string.once),
-                    isSelected = false
-                )
-
-                ChoiceItem(
-                    choice = stringResource(R.string.daily),
-                    isSelected = false
-                )
-
-                ChoiceItem(
-                    choice = stringResource(R.string.weekly),
-                    isSelected = false
-                )
-
-                ChoiceItem(
-                    choice = stringResource(R.string.monthly),
-                    isSelected = false
-                )
-
-                ChoiceItem(
-                    choice = stringResource(R.string.yearly),
-                    isSelected = true
-                )
-
+            FlowRow {
+                Repeat.entries.forEach {
+                    ChoiceItem(
+                        choice = it,
+                        selectedChoice = selectedRepeat,
+                        onClick = { selectedRepeat = it }
+                    )
+                }
             }
+
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -423,4 +405,10 @@ private fun MedicineContentPreview() {
     PetPalTheme {
         MedicineContent()
     }
+}
+
+
+enum class Tab {
+    ScheduleReminder,
+    LogPastDose
 }

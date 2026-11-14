@@ -29,9 +29,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import nondas.pap.petpal.presentation.ForgotPasswordViewmodel
 import nondas.pap.petpal.ui.composable.BackButton
@@ -40,6 +42,7 @@ import nondas.pap.petpal.ui.composable.FieldLabel
 import nondas.pap.petpal.ui.composable.PrimaryButton
 import nondas.pap.petpal.ui.theme.PetPalShapes
 import nondas.pap.petpal.ui.theme.PetPalTheme
+import kotlin.time.Duration.Companion.milliseconds
 
 
 @Composable
@@ -82,6 +85,20 @@ private fun ForgotPasswordContent(
 ) {
 
     var email by remember { mutableStateOf("") }
+    var time by remember { mutableStateOf(60) }
+    var buttonEnabled = true
+
+    LaunchedEffect(buttonEnabled) {
+        if (!buttonEnabled) {
+            while (time > 0) {
+                delay(1000L.milliseconds)
+                time -= 1
+
+                if (time == 0)
+                    buttonEnabled = true
+            }
+        }
+    }
 
     Scaffold(
         snackbarHost = {
@@ -156,10 +173,25 @@ private fun ForgotPasswordContent(
             Spacer(modifier = Modifier.height(24.dp))
 
             PrimaryButton(
-                onClick = { onSendLinkButtonClicked(email) },
+                onClick = {
+                    onSendLinkButtonClicked(email)
+                    buttonEnabled = false
+                },
                 text = stringResource(R.string.send_reset_link),
-                enabled = email.isNotEmpty()
+                enabled = email.isNotEmpty() && buttonEnabled
             )
+
+
+            if (!buttonEnabled) {
+                Text(
+                    text = "$time",
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(20.dp),
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+
 
         }
 

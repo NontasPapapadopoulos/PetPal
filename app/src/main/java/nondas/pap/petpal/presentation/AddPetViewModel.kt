@@ -17,26 +17,16 @@ import javax.inject.Inject
 @HiltViewModel
 class AddPetViewModel @Inject constructor(
     private val addPet: AddPet,
-    private val getPet: GetPet,
-    private val updatePet: UpdatePet
 ): ViewModel() {
-
-    val petFlow = getPet.execute(GetPet.Params(""))
-        .map { it.getOrThrow() }
-        .catch {  }
 
 
     fun onAddPet(pet: Pet) {
         viewModelScope.launch {
-            addPet.execute().fold(
+            addPet.execute(AddPet.Params(pet)).fold(
                 onSuccess = {},
                 onFailure = {}
             )
         }
     }
-
-
-
-
 
 }

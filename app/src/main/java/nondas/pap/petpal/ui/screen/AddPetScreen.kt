@@ -38,26 +38,30 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import nondas.pap.petpal.ui.composable.BackButton
 import nondas.pap.petpal.R
+import nondas.pap.petpal.domain.model.Pet
 import nondas.pap.petpal.domain.model.enums.Sex
 import nondas.pap.petpal.domain.model.enums.Specie
+import nondas.pap.petpal.presentation.AddPetViewModel
 import nondas.pap.petpal.ui.composable.Field
 import nondas.pap.petpal.ui.composable.FieldLabel
 import nondas.pap.petpal.ui.composable.PrimaryButton
 import nondas.pap.petpal.ui.composable.SelectionRow
-import nondas.pap.petpal.presentation.Mode
 import nondas.pap.petpal.ui.theme.PetPalShapes
 import nondas.pap.petpal.ui.theme.PetPalTheme
 
 @Composable
 fun AddPetScreen(
     navigateBack: () -> Unit,
-    mode: Mode
+    viewModel: AddPetViewModel = hiltViewModel()
 ) {
 
-
-
+    AddPetContent(
+        onBackClicked = navigateBack,
+        onSavePetClicked = { viewModel.onAddPet(it) }
+    )
 
 }
 
@@ -65,7 +69,7 @@ fun AddPetScreen(
 @Composable
 private fun AddPetContent(
     onBackClicked: () -> Unit,
-    onSavePetClicked: () -> Unit
+    onSavePetClicked: (Pet) -> Unit
 ) {
 
     var name by remember { mutableStateOf("") }
@@ -261,10 +265,11 @@ private fun AddPetContent(
 
 
             SelectionRow(
-                firstSelectionText = "Male",
-                secondSelectionText = "Female",
-                onFirstSelectionClicked = { sex = Sex.Male },
-                onSecondSelectionClicked = { sex = Sex.Female }
+                firstOption = Sex.Male,
+                secondOption = Sex.Female,
+                selected = sex,
+                onFirstSelected = { sex = Sex.Male },
+                onSecondSelected = { sex = Sex.Female }
             )
 
 
@@ -292,7 +297,19 @@ private fun AddPetContent(
 
 
             PrimaryButton(
-                onClick = onSavePetClicked,
+                onClick = {
+                    val pet = Pet(
+                        name = name,
+                        birthday = birthday,
+                        sex = sex,
+                        specie = specie,
+                        breed = breed,
+                        microchipNumber = microChip,
+                        weight = weight
+                    )
+
+                    onSavePetClicked(pet)
+                },
                 text = stringResource(R.string.save_pet)
             )
 

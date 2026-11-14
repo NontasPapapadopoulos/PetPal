@@ -4,21 +4,28 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.Composable
-import androidx.navigation3.runtime.rememberNavBackStack
-import androidx.navigation3.ui.NavDisplay
+import androidx.activity.viewModels
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
+import nondas.pap.petpal.presentation.MainViewModel
 import nondas.pap.petpal.ui.navigation.Navigation
 
 import nondas.pap.petpal.ui.theme.PetPalTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val viewModel: MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            PetPalTheme {
+
+            val settings by viewModel.state.collectAsStateWithLifecycle()
+
+            PetPalTheme(darkTheme = settings.darkThemeEnabled) {
                 Navigation()
             }
         }

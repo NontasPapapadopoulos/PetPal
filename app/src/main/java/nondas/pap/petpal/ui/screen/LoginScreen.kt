@@ -284,7 +284,7 @@ private fun LoginContent(
     }
 }
 
-private suspend fun launchCredential(
+suspend fun launchCredential(
     context: Context,
     onRequestResult: (String) -> Unit
 ) {

@@ -16,17 +16,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import nondas.pap.petpal.R
+import nondas.pap.petpal.domain.model.enums.Sex
 import nondas.pap.petpal.ui.theme.PetPalShapes
 import nondas.pap.petpal.ui.theme.PetPalTheme
 
 @Composable
-fun SelectionRow(
-    firstSelectionText: String,
-    secondSelectionText: String,
-    onFirstSelectionClicked: () -> Unit,
-    onSecondSelectionClicked: () -> Unit,
+fun <T : Enum<T>> SelectionRow(
+    firstOption: T,
+    secondOption: T,
+    selected: T,
+    onFirstSelected: () -> Unit,
+    onSecondSelected: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+
     Row(
         modifier = modifier.fillMaxWidth()
             .height(52.dp)
@@ -39,17 +42,17 @@ fun SelectionRow(
     ) {
 
         SelectionItem(
-            selection = firstSelectionText,
-            isSelected = false,
+            selection = firstOption,
+            isSelected = selected == firstOption,
             modifier = Modifier.weight(1f)
-                .clickable { onFirstSelectionClicked() }
+                .clickable { onFirstSelected() }
         )
 
         SelectionItem(
-            selection = secondSelectionText,
-            isSelected = true,
+            selection = secondOption,
+            isSelected = selected == secondOption,
             modifier = Modifier.weight(1f)
-                .clickable { onSecondSelectionClicked() }
+                .clickable { onSecondSelected() }
         )
 
     }
@@ -57,8 +60,8 @@ fun SelectionRow(
 
 
 @Composable
-private fun SelectionItem(
-    selection: String,
+private fun <T : Enum<T>> SelectionItem(
+    selection: T,
     isSelected: Boolean,
     modifier: Modifier = Modifier
 ) {
@@ -68,7 +71,7 @@ private fun SelectionItem(
 
 
     Text(
-        text = selection,
+        text = selection.name,
         color = color,
         style = MaterialTheme.typography.labelMedium,
         textAlign = TextAlign.Center,
@@ -87,10 +90,11 @@ private fun SelectionItem(
 private fun SelectionRowPreview() {
     PetPalTheme {
         SelectionRow(
-            firstSelectionText = stringResource(R.string.male),
-            secondSelectionText = stringResource(R.string.female),
-            onSecondSelectionClicked = {},
-            onFirstSelectionClicked = {}
+            firstOption = Sex.Male,
+            secondOption = Sex.Female,
+            selected = Sex.Female,
+            onSecondSelected = {},
+            onFirstSelected = {}
         )
     }
 }

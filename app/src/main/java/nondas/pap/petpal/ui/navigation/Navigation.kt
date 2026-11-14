@@ -55,7 +55,11 @@ fun Navigation() {
 
                 is Settings ->
                     NavEntry(key = route) {
-                        SettingsScreen()
+                        SettingsScreen(
+                            navigateToHome = { backStack.add(Home) },
+                            navigateToLogin = { backStack.add(Login) },
+                            navigateToChangePassword = { backStack.add(ChangePassword) }
+                        )
                     }
 
                 is ForgotPassword ->
@@ -86,7 +90,6 @@ fun Navigation() {
                     NavEntry(key = route) {
                         AddPetScreen(
                             navigateBack = { backStack.removeLastOrNull() },
-                            mode = Mode.Add,
                         )
                     }
 

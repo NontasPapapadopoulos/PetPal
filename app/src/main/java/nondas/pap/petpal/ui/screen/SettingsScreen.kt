@@ -16,7 +16,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -76,7 +75,7 @@ fun SettingsScreen(
         onChangePasswordClicked = { navigateToChangePassword() },
         onDeleteAccount = { viewModel.onDeleteAccount(it) },
         onSignOut = { viewModel.onSignOut() },
-        onUpdateTheme = { viewModel.onUpdateTheme(it) },
+        onToggleDarkTheme = { viewModel.onToggleDarkTheme(it) },
         onTogglePushNotifications = { viewModel.onTogglePushNotifications(it) }
 
     )
@@ -92,12 +91,10 @@ private fun SettingsContent(
     onDeleteAccount: (String) -> Unit,
     onSignOut: () -> Unit,
     onTogglePushNotifications: (Boolean) -> Unit,
-    onUpdateTheme: (Theme) -> Unit
+    onToggleDarkTheme: (Boolean) -> Unit
 ) {
 
     var showPasswordDialog by remember { mutableStateOf(false) }
-    var showThemeDialog by remember { mutableStateOf(false) }
-    var password by remember { mutableStateOf("") }
 
     Scaffold(
         bottomBar = {
@@ -204,9 +201,11 @@ private fun SettingsContent(
                 SettingItem(
                     onClick = { },
                     primaryText = stringResource(R.string.theme),
-                    secondaryText = stringResource(R.string.system_default),
                     composable = {
-                        ForwardArrowIcon()
+                        Switch(
+                            checked = content.settings.darkThemeEnabled,
+                            onCheckedChange = { onToggleDarkTheme(it) }
+                        )
                     }
                 )
 
@@ -411,14 +410,14 @@ private fun SettingsContentPreview() {
                     fullName = "Nondas Pa",
                     email = "nondas.papadopoulos@gmail.com"
                 ),
-                settings = Settings(true, Theme.Light)
+                settings = Settings(true, false)
             ),
             onHomeClicked = {},
             onChangePasswordClicked = {},
             onDeleteAccount = {},
             onSignOut = {},
             onTogglePushNotifications = {},
-            onUpdateTheme = {},
+            onToggleDarkTheme = {},
         )
     }
 }

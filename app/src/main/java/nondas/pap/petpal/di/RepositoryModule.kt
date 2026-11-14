@@ -7,9 +7,11 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import nondas.pap.petpal.data.MedicineDataRepository
 import nondas.pap.petpal.data.PetDataRepository
+import nondas.pap.petpal.data.SettingsDataRepository
 import nondas.pap.petpal.data.UserDataRepository
 import nondas.pap.petpal.domain.repository.MedicineRepository
 import nondas.pap.petpal.domain.repository.PetRepository
+import nondas.pap.petpal.domain.repository.SettingsRepository
 import nondas.pap.petpal.domain.repository.UserRepository
 import javax.inject.Singleton
 
@@ -42,5 +44,14 @@ object RepositoryModule {
         firestore: FirebaseFirestore
     ): MedicineRepository {
         return MedicineDataRepository(firestore)
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideSettingsRepository(
+        firestore: FirebaseFirestore
+    ): SettingsRepository {
+        return SettingsDataRepository(firestore)
     }
 }

@@ -28,7 +28,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
@@ -38,8 +41,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import nondas.pap.petpal.ui.composable.BackButton
 import nondas.pap.petpal.R
+import nondas.pap.petpal.domain.model.enums.MedicineType
+import nondas.pap.petpal.presentation.PetState
 import nondas.pap.petpal.presentation.PetViewModel
 import nondas.pap.petpal.ui.composable.ChoiceItem
 import nondas.pap.petpal.ui.composable.SelectionRow
@@ -53,15 +59,24 @@ fun PetScreen(
     navigateToMedicine: () -> Unit,
     navigateToEditPet: () -> Unit,
     viewModel: PetViewModel = hiltViewModel()
-
 ) {
 
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+
+    PetContent(
+        content = state,
+        onBackClicked = navigateBack,
+        onEditClicked = navigateToEditPet,
+        onAddMedicineClicked = navigateToMedicine
+    )
 }
 
 
 @Composable
 private fun PetContent(
-    onNavigateBack: () -> Unit,
+    content: PetState,
+    onBackClicked: () -> Unit,
     onEditClicked: () -> Unit,
     onAddMedicineClicked: () -> Unit
 ) {
@@ -93,6 +108,9 @@ private fun PetContent(
         },
     ) {
 
+        var selectedTab by remember { mutableStateOf(MedicineTab.Upcoming) }
+        var selectedMedicine by remember { mutableStateOf(MedicineChoice.All) }
+
         Column(
             modifier = Modifier.padding(it)
                 .padding(top = 24.dp)
@@ -109,7 +127,7 @@ private fun PetContent(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    BackButton { onNavigateBack() }
+                    BackButton { onBackClicked() }
 
                     Button(
                         onClick = onEditClicked,
@@ -127,21 +145,23 @@ private fun PetContent(
                 }
 
                 PetDetails(
-                    name = "Roza",
-                    sex = "Female",
-                    breed = "Frenchton",
-                    age = "6",
-                    weight = "10",
-                    chipNumber = "1231231"
+                    name = content.pet.name,
+                    sex = content.pet.sex.name,
+                    breed = content.pet.breed,
+                    age = content.pet.getAge(),
+                    weight = content.pet.weight,
+                    chipNumber = content.pet.microchipNumber
                 )
             }
 
+
             SelectionRow(
-                firstSelectionText = stringResource(R.string.male),
-                secondSelectionText = stringResource(R.string.female),
+                firstOption = MedicineTab.Upcoming,
+                secondOption = MedicineTab.History,
                 modifier = Modifier.padding(horizontal = 24.dp),
-                onFirstSelectionClicked = {},
-                onSecondSelectionClicked = {}
+                selected = selectedTab,
+                onFirstSelected = { selectedTab = MedicineTab.Upcoming},
+                onSecondSelected = { selectedTab = MedicineTab.History }
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -159,26 +179,14 @@ private fun PetContent(
             ) {
 
                 FlowRow {
-                    ChoiceItem(
-                        choice = "All",
-                        isSelected = true
-                    )
+                    MedicineChoice.entries.forEach {
+                        ChoiceItem(
+                            choice = it,
+                            selectedChoice = selectedMedicine,
+                            onClick = { selectedMedicine = it }
 
-                    ChoiceItem(
-                        choice = "Vaccines",
-                        isSelected = false
-                    )
-
-
-                    ChoiceItem(
-                        choice = "Pills",
-                        isSelected = false
-                    )
-
-                    ChoiceItem(
-                        choice = "Treatments",
-                        isSelected = false
-                    )
+                        )
+                    }
                 }
 
 
@@ -254,6 +262,13 @@ private fun PetDetails(
     }
 }
 
+enum class MedicineChoice {
+    All,
+    Vaccine,
+    Pill,
+    Treatment,
+    Other
+}
 
 
 @Composable
@@ -317,8 +332,6 @@ private fun MedicineItem(
                         tint = color.second,
                     )
                 }
-
-
             }
 
             Spacer(modifier = Modifier.width(12.dp))
@@ -359,13 +372,19 @@ private fun MedicineItem(
     }
 }
 
+enum class MedicineTab {
+    Upcoming,
+    History
+}
+
 
 @Preview
 @Composable
 private fun PetContentContent() {
     PetPalTheme {
         PetContent(
-            onNavigateBack = {},
+            content = PetState(),
+            onBackClicked = {},
             onEditClicked = {},
             onAddMedicineClicked = {}
         )

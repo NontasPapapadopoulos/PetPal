@@ -33,6 +33,10 @@ object ResetPassword: NavKey
 
 
 @Serializable
+object ChangePassword: NavKey
+
+
+@Serializable
 object Pet: NavKey
 
 

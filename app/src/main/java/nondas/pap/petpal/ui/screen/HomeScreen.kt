@@ -14,9 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Notifications
@@ -37,11 +35,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.google.apps.card.v1.OnClick
 import nondas.pap.petpal.R
 import nondas.pap.petpal.domain.model.Pet
+import nondas.pap.petpal.domain.model.User
 import nondas.pap.petpal.domain.model.enums.Sex
 import nondas.pap.petpal.domain.model.enums.Specie
+import nondas.pap.petpal.presentation.HomeState
 import nondas.pap.petpal.presentation.HomeViewModel
 import nondas.pap.petpal.ui.Screen
 import nondas.pap.petpal.ui.composable.Badge
@@ -49,7 +48,6 @@ import nondas.pap.petpal.ui.composable.BottomAppBar
 import nondas.pap.petpal.ui.composable.ForwardArrowIcon
 import nondas.pap.petpal.ui.theme.PetPalShapes
 import nondas.pap.petpal.ui.theme.PetPalTheme
-import kotlin.random.Random
 
 
 @Composable
@@ -77,7 +75,7 @@ fun HomeScreen(
 
 @Composable
 private fun HomeContent(
-    content: List<Pet>,
+    content: HomeState,
     onSettingsClicked: () -> Unit,
     onAddPetClicked: () -> Unit,
     onPetClicked: (String) -> Unit,
@@ -113,7 +111,7 @@ private fun HomeContent(
                     )
 
                     Text(
-                        text = "Hi, Nondas",
+                        text = "Hi, ${content.user.fullName.split(" ")[0]}",
                         style = MaterialTheme.typography.headlineSmall
                     )
                 }
@@ -144,12 +142,12 @@ private fun HomeContent(
 
 
             LazyColumn {
-                items(content) { pet ->
+                items(content.pets) { pet ->
                     PetItem(
                         name = pet.name,
                         specie = pet.specie,
                         breed = pet.breed,
-                        age = pet.age,
+                        age = pet.birthday,
                         onClick = { onPetClicked("") }
                     ) 
                 }
@@ -252,7 +250,10 @@ fun Color.darken(factor: Float = 0.6f): Color = copy(
 private fun HomeContentPreview() {
     PetPalTheme {
         HomeContent(
-            content = generatePets(),
+            content = HomeState(
+                user = User(fullName = "Nondas Papadopoulos", email = ""),
+                pets = generatePets(),
+            ),
             onSettingsClicked = {},
             onPetClicked = {},
             onAddPetClicked = {},
@@ -268,10 +269,11 @@ private fun generatePets(): List<Pet> {
             id = it.toString(),
             ownerId = ((1..100).random()).toString(),
             name = "Happy Pet $it",
-            age = ((1..12).random()).toString(),
+            birthday = ((1..12).random()).toString(),
             sex = Sex.Male,
             specie = Specie.Dog,
             breed = "whatever",
+            weight = "10",
             microchipNumber = ((1..10000).random()).toString()
         )
     }

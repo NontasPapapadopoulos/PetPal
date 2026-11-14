@@ -20,7 +20,6 @@ import nondas.pap.petpal.domain.interactor.user.GetUser
 import nondas.pap.petpal.domain.interactor.user.SignOut
 import nondas.pap.petpal.domain.model.Settings
 import nondas.pap.petpal.domain.model.User
-import nondas.pap.petpal.domain.model.enums.Theme
 import javax.inject.Inject
 
 @HiltViewModel
@@ -62,8 +61,8 @@ class SettingsViewModel @Inject constructor(
         )
 
 
-    fun onUpdateTheme(theme: Theme) {
-        val updatedSettings = state.value.settings.copy(theme = theme)
+    fun onToggleDarkTheme(enabled: Boolean) {
+        val updatedSettings = state.value.settings.copy(darkThemeEnabled = enabled)
         viewModelScope.launch {
             updateSettings.execute(UpdateSettings.Params(updatedSettings))
                 .fold(
@@ -110,6 +109,6 @@ class SettingsViewModel @Inject constructor(
 }
 
 data class SettingsState(
-    val settings: Settings = Settings(true, Theme.Light),
+    val settings: Settings = Settings(true, false),
     val user: User = User("", "")
 )
