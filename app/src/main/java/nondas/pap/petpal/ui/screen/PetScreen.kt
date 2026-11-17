@@ -23,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,6 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.flow.collectLatest
 import nondas.pap.petpal.ui.composable.BackButton
 import nondas.pap.petpal.R
 import nondas.pap.petpal.domain.model.Pet
@@ -58,9 +60,16 @@ fun PetScreen(
     navigateBack: () -> Unit,
     petId: String,
     viewModel: PetViewModel = hiltViewModel<PetViewModel, PetViewModel.Factory>(
+        key = petId,
         creationCallback = { factory -> factory.create(id = petId) }
     )
 ) {
+
+    LaunchedEffect(Unit) {
+        viewModel.navigationFlow.collectLatest {
+            navigateBack()
+        }
+    }
 
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -82,13 +91,13 @@ private fun PetContent(
     onUpdatePetClicked: (Pet) -> Unit
 ) {
 
-    var name by remember { mutableStateOf(content.name) }
-    var specie by remember { mutableStateOf(content.specie) }
-    var breed by remember { mutableStateOf(content.breed) }
-    var birthday by remember { mutableStateOf(content.birthday) }
-    var weight by remember { mutableStateOf(content.weight) }
-    var sex by remember { mutableStateOf(content.sex) }
-    var microChip by remember { mutableStateOf(content.microchipNumber) }
+    var name by remember(content.name) { mutableStateOf(content.name) }
+    var specie by remember(content.specie) { mutableStateOf(content.specie) }
+    var breed by remember(content.breed) { mutableStateOf(content.breed) }
+    var birthday by remember(content.birthday) { mutableStateOf(content.birthday) }
+    var weight by remember(content.weight) { mutableStateOf(content.weight) }
+    var sex by remember(content.sex) { mutableStateOf(content.sex) }
+    var microChipNumber by remember(content.microchipNumber) { mutableStateOf(content.microchipNumber) }
 
 
     Scaffold {
@@ -292,8 +301,8 @@ private fun PetContent(
 
 
             Field(
-                value = microChip,
-                onValueChange = { microChip = it },
+                value = microChipNumber,
+                onValueChange = { microChipNumber = it },
                 placeholder = "15 Digits",
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number
@@ -309,12 +318,14 @@ private fun PetContent(
             PrimaryButton(
                 onClick = {
                     val pet = Pet(
+                        id = content.id,
+                        ownerId = content.ownerId,
                         name = name,
                         birthday = birthday,
                         sex = sex,
                         specie = specie,
                         breed = breed,
-                        microchipNumber = microChip,
+                        microchipNumber = microChipNumber,
                         weight = weight
                     )
 

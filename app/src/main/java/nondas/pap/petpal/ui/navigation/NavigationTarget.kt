@@ -37,7 +37,9 @@ object ChangePassword: NavKey
 
 
 @Serializable
-object PetDetails: NavKey
+data class PetDetails(
+    val petId: String
+): NavKey
 
 
 @Serializable

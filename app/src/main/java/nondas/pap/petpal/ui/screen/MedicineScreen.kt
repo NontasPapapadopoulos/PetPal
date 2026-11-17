@@ -26,6 +26,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,6 +38,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.firebase.Timestamp
+import kotlinx.coroutines.flow.collectLatest
 import nondas.pap.petpal.ui.composable.BackButton
 import nondas.pap.petpal.R
 import nondas.pap.petpal.domain.model.Medicine
@@ -49,9 +52,11 @@ import nondas.pap.petpal.ui.composable.ChoiceItem
 import nondas.pap.petpal.ui.composable.Field
 import nondas.pap.petpal.ui.composable.FieldLabel
 import nondas.pap.petpal.ui.composable.PrimaryButton
-import nondas.pap.petpal.ui.composable.SelectionRow
 import nondas.pap.petpal.ui.theme.PetPalShapes
 import nondas.pap.petpal.ui.theme.PetPalTheme
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 @Composable
@@ -60,10 +65,16 @@ fun MedicineScreen(
     medicineId: String,
     petId: String,
     viewModel: MedicineViewModel = hiltViewModel<MedicineViewModel, MedicineViewModel.Factory>(
+        key = medicineId,
         creationCallback = { factory -> factory.create(petId = petId, medicineId = medicineId) }
     )
 ) {
 
+    LaunchedEffect(Unit) {
+        viewModel.navigationFlow.collectLatest {
+            navigateBack()
+        }
+    }
 
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -93,10 +104,14 @@ private fun MedicineContent(
                 .verticalScroll(rememberScrollState())
 
         ) {
-            var selectedPetId by remember { mutableStateOf("") }
-            var selectedRepeat by remember { mutableStateOf(Repeat.Once) }
+            var selectedPetId by remember() { mutableStateOf(content.medicine.petId) }
+            var selectedRepeat by remember(content.medicine.repeat) { mutableStateOf(content.medicine.repeat) }
 //            var selectedTab by remember { mutableStateOf(Tab.ScheduleReminder) }
-            var selectedMedicine by remember { mutableStateOf(MedicineType.Vaccine) }
+            var medicineType by remember(content.medicine.type) { mutableStateOf(content.medicine.type) }
+            var name by remember(content.medicine.name) { mutableStateOf(content.medicine.name) }
+            var dose by remember(content.medicine.dose) { mutableStateOf(content.medicine.dose) }
+            var date: String by remember((content.medicine.date)) { mutableStateOf(content.medicine.date.toString()) }
+            var notes by remember(content.medicine.notes) { mutableStateOf(content.medicine.notes) }
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -124,25 +139,27 @@ private fun MedicineContent(
 //                onSecondSelected = { selectedTab = Tab.LogPastDose }
 //            )
 
-            Spacer(modifier = Modifier.height(16.dp))
 
 
-            FieldLabel(text = stringResource(R.string.forr))
-
-            if (content.pets.isNotEmpty())
-                FlowRow(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    content.pets.forEach {
-                        PetItem(
-                            name = it.name,
-                            isSelected = it.id == selectedPetId,
-                            onClick = { selectedPetId = it.id }
-                        )
-                    }
-
-                }
+            // medicine exists, and we don't want to change pet.
+//            if (content.medicine.id.isEmpty()) {
+//                Spacer(modifier = Modifier.height(16.dp))
+//
+//                FieldLabel(text = stringResource(R.string.forr))
+//
+//                FlowRow(
+//                    modifier = Modifier.fillMaxWidth(),
+//                    horizontalArrangement = Arrangement.SpaceBetween
+//                ) {
+//                    content.pets.forEach {
+//                        PetItem(
+//                            name = it.name,
+//                            isSelected = it.id == selectedPetId,
+//                            onClick = { selectedPetId = it.id }
+//                        )
+//                    }
+//                }
+//            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -157,7 +174,7 @@ private fun MedicineContent(
                 MedicineType.entries.forEach {
                     MedicineItem(
                         name = it.name,
-                        isSelected = it == selectedMedicine
+                        isSelected = it == medicineType
                     )
                 }
             }
@@ -168,8 +185,8 @@ private fun MedicineContent(
             FieldLabel(text = stringResource(R.string.medicine_name))
 
             Field(
-                value = "",
-                onValueChange = {},
+                value = name,
+                onValueChange = { name = it },
                 placeholder = "e.g. Rabies booster"
             )
 
@@ -183,8 +200,8 @@ private fun MedicineContent(
                     )
 
                     Field(
-                        value = "",
-                        onValueChange = {},
+                        value = dose,
+                        onValueChange = { dose = it },
                         placeholder = "e.g. 1 tablet"
                     )
                 }
@@ -198,8 +215,8 @@ private fun MedicineContent(
 
 
                     Field(
-                        value = "",
-                        onValueChange = {},
+                        value = date,
+                        onValueChange = { date = it },
                         placeholder = "DD / MM / YYYY",
                     )
                 }
@@ -236,19 +253,37 @@ private fun MedicineContent(
             )
 
             Field(
-                value = "",
-                onValueChange = {},
+                value = notes,
+                onValueChange = { notes = it },
                 modifier = Modifier.fillMaxWidth()
                     .height(88.dp),
                 placeholder =  stringResource(R.string.notes_placeholder)
-
             )
 
 
             Spacer(modifier = Modifier.weight(1f))
 
             PrimaryButton(
-                onClick = {},
+                onClick = {
+//                    val formatter = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+//                    val date = formatter.parse(date)
+
+                    val medicine = Medicine(
+                        id = "",
+                        ownerId = "",
+                        petId = selectedPetId,
+                        name = name,
+                        type = medicineType,
+                        date = Timestamp(Date()),
+                        notes = notes,
+                        repeat = selectedRepeat,
+                        dose = dose
+                    )
+                    if (content.medicine.id.isEmpty())
+                        onSaveMedicine(medicine)
+                    else
+                        onUpdateMedicine(medicine.copy(id = content.medicine.id))
+                },
                 text = stringResource(R.string.save_reminder),
                 modifier = Modifier.padding(top = 24.dp)
             )

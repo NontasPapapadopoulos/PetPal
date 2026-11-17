@@ -58,7 +58,11 @@ fun PetDetailsScreen(
     navigateBack: () -> Unit,
     navigateToMedicine: (String, String) -> Unit,
     navigateToEditPet: (String) -> Unit,
-    viewModel: PetDetailsViewModel = hiltViewModel()
+    petId: String,
+    viewModel: PetDetailsViewModel = hiltViewModel<PetDetailsViewModel, PetDetailsViewModel.Factory> (
+        key = petId,
+        creationCallback = { factory -> factory.create(petId = petId) }
+    )
 ) {
 
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -68,7 +72,8 @@ fun PetDetailsScreen(
         content = state,
         onBackClicked = navigateBack,
         onEditClicked = navigateToEditPet,
-        onAddMedicineClicked = { petId, medicineId -> navigateToMedicine(petId, medicineId) }
+        onAddMedicineClicked = { petId -> navigateToMedicine(petId, "") },
+        onMedicineClicked = { petId, medicineId -> navigateToMedicine(petId, medicineId) }
     )
 }
 
@@ -78,12 +83,13 @@ private fun PetContent(
     content: PetState,
     onBackClicked: () -> Unit,
     onEditClicked: (String) -> Unit,
-    onAddMedicineClicked: (String, String) -> Unit
+    onAddMedicineClicked: (String) -> Unit,
+    onMedicineClicked: (String, String) -> Unit
 ) {
     Scaffold(
         floatingActionButton = {
             Button(
-                onClick = { onAddMedicineClicked(content.pet.id, "") },
+                onClick = { onAddMedicineClicked(content.pet.id) },
                 colors = ButtonDefaults.buttonColors().copy(
                     containerColor = MaterialTheme.colorScheme.secondary
                 ),
@@ -192,35 +198,15 @@ private fun PetContent(
                 content.medicines.forEach {
                     MedicineItem(
                         imageVector = Icons.Outlined.Vaccines,
-                        description = "Rabies booster",
-                        type = "Vaccine",
-                        date = "Nov 5",
-                        frequency = "yearly",
-                        daysLeft = "In 3 days",
-                        onClick = { onAddMedicineClicked(content.pet.id, it.id) }
+                        description = it.name,
+                        type = it.type.name,
+                        date = it.date.toString(),
+                        frequency = it.repeat.name,
+                        daysLeft = "In 3 days", // TODO
+                        onClick = { onMedicineClicked(content.pet.id, it.id) }
                     )
                 }
 
-//
-//
-//                MedicineItem(
-//                    imageVector = Icons.Outlined.Shield,
-//                    description = "Flea & tick spot-on",
-//                    type = "Treatment",
-//                    date = "Dec 14",
-//                    frequency = "monthly",
-//                    daysLeft = "29 days",
-//                )
-//
-//
-//                MedicineItem(
-//                    painter = painterResource(R.drawable.outline_pill_24),
-//                    description = "Flea & tick spot-on",
-//                    type = "Treatment",
-//                    date = "Dec 14",
-//                    frequency = "monthly",
-//                    daysLeft = "29 days",
-//                )
             }
 
         }
@@ -394,7 +380,8 @@ private fun PetContentContent() {
             content = PetState(),
             onBackClicked = {},
             onEditClicked = {},
-            onAddMedicineClicked = { _, _ -> }
+            onMedicineClicked = { _, _ -> },
+            onAddMedicineClicked = {}
         )
     }
 }

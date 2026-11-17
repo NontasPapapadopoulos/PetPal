@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.tasks.await
 import nondas.pap.petpal.domain.model.Pet
 import nondas.pap.petpal.domain.repository.PetRepository
+import java.util.UUID
 
 class PetDataRepository(
     private val firestore: FirebaseFirestore
@@ -31,6 +32,10 @@ class PetDataRepository(
     }
 
     override suspend fun add(pet: Pet) {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
+            ?: throw IllegalStateException("User not authenticated")
+
+        val pet = pet.copy(ownerId = uid, id = UUID.randomUUID().toString())
         firestore.collection(COLLECTION_NAME)
             .document(pet.id)
             .set(pet)
@@ -40,7 +45,7 @@ class PetDataRepository(
     override suspend fun update(pet: Pet) {
         firestore.collection(COLLECTION_NAME)
             .document(pet.id)
-            .set(pet) // or .update(mapOf(...)) for partial updates
+            .set(pet)
             .await()
     }
 

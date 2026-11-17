@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.fold
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import nondas.pap.petpal.domain.execute
@@ -15,7 +14,6 @@ import nondas.pap.petpal.domain.interactor.pet.GetPets
 import nondas.pap.petpal.domain.interactor.user.GetUser
 import nondas.pap.petpal.domain.model.Pet
 import nondas.pap.petpal.domain.model.User
-import nondas.pap.petpal.ui.navigation.Home
 import javax.inject.Inject
 
 @HiltViewModel

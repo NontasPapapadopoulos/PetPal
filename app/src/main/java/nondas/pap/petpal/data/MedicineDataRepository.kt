@@ -1,13 +1,14 @@
 package nondas.pap.petpal.data
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.dataObjects
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.tasks.await
 import nondas.pap.petpal.domain.model.Medicine
-import nondas.pap.petpal.domain.model.Pet
 import nondas.pap.petpal.domain.repository.MedicineRepository
+import java.util.UUID
 
 class MedicineDataRepository(
     private val firestore: FirebaseFirestore
@@ -30,6 +31,7 @@ class MedicineDataRepository(
     }
 
     override suspend fun add(medicine: Medicine) {
+        val medicine = medicine.copy(id = UUID.randomUUID().toString())
         firestore
             .collection(PET_COLLECTION).document(medicine.petId)
             .collection(MEDICINE_SUBCOLLECTION).document(medicine.id)
@@ -41,7 +43,7 @@ class MedicineDataRepository(
         firestore
             .collection(PET_COLLECTION).document(medicine.petId)
             .collection(MEDICINE_SUBCOLLECTION).document(medicine.id)
-            .set(medicine)
+            .set(medicine, SetOptions.merge())
             .await()
     }
 

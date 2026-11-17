@@ -48,8 +48,8 @@ fun BottomAppBar(
                 modifier = Modifier
                     .weight(1f)
                     .clickable {
-                        if (screen == Screen.Home)
-                            onSettingsClicked()
+                        if (screen == Screen.Settings)
+                            onHomeClicked()
                     }
             ) {
 
@@ -72,8 +72,8 @@ fun BottomAppBar(
                 modifier = Modifier
                     .weight(1f)
                     .clickable {
-                        if (screen == Screen.Settings)
-                            onHomeClicked()
+                        if (screen == Screen.Home)
+                            onSettingsClicked()
                     }
             ) {
                 Icon(

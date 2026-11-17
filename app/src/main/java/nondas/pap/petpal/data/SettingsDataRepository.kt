@@ -6,6 +6,8 @@ import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.snapshots
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
 import nondas.pap.petpal.domain.model.Settings
@@ -17,15 +19,17 @@ class SettingsDataRepository @Inject constructor(
 ): SettingsRepository {
 
     override fun get(): Flow<Settings> {
-        val uid = getUserId()
-
-        return firestore.collection(COLLECTION_NAME)
-            .document(uid)
-            .snapshots()
-            .map { it.toObject(Settings::class.java) ?: Settings.DEFAULT }
-            .catch {
-                emit(Settings.DEFAULT)
-            }
+        return flow {
+            val uid = getUserId()
+           firestore.collection(COLLECTION_NAME)
+                .document(uid)
+                .snapshots()
+                .collect { snapshot ->
+                    emit(snapshot.toObject(Settings::class.java) ?: Settings.DEFAULT)
+                }
+        }.catch {
+            emit(Settings.DEFAULT)
+        }
     }
 
     override suspend fun update(settings: Settings) {

@@ -48,6 +48,9 @@ import nondas.pap.petpal.ui.composable.BottomAppBar
 import nondas.pap.petpal.ui.composable.ForwardArrowIcon
 import nondas.pap.petpal.ui.theme.PetPalShapes
 import nondas.pap.petpal.ui.theme.PetPalTheme
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 @Composable
@@ -105,13 +108,13 @@ private fun HomeContent(
 
                 Column {
                     Text(
-                        text = "Monday, 2 November",
+                        text = "${SimpleDateFormat("EEEE, dd MMMM", Locale.ENGLISH).format(Date())}",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
 
                     Text(
-                        text = "Hi, ${content.user.fullName.split(" ")[0]}",
+                        text = "Hi, ${content.user.fullName.split(" ")[0].capitalize()}",
                         style = MaterialTheme.typography.headlineSmall
                     )
                 }
@@ -148,7 +151,9 @@ private fun HomeContent(
                         specie = pet.specie,
                         breed = pet.breed,
                         age = pet.birthday,
-                        onClick = { onPetClicked("") }
+                        onClick = {
+                            onPetClicked(pet.id)
+                        }
                     ) 
                 }
             }

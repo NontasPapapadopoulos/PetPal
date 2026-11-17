@@ -6,6 +6,8 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -33,7 +35,6 @@ class MedicineViewModel @AssistedInject constructor(
     @Assisted("medicineId") private val medicineId: String
 ): ViewModel() {
 
-
     @AssistedFactory
     interface Factory {
         fun create(
@@ -41,6 +42,10 @@ class MedicineViewModel @AssistedInject constructor(
             @Assisted("medicineId") medicineId: String
         ): MedicineViewModel
     }
+
+    private val _navigationFlow = MutableSharedFlow<Unit>()
+    val navigationFlow: SharedFlow<Unit> = _navigationFlow
+
 
     private val petsFlow = getPets.execute()
         .map { it.getOrThrow() }
@@ -50,15 +55,6 @@ class MedicineViewModel @AssistedInject constructor(
         .map { it.getOrThrow() }
         .catch {}
 
-    fun onAddMedicine(medicine: Medicine) {
-        viewModelScope.launch {
-            addMedicine.execute(AddMedicine.Params(medicine))
-                .fold(
-                    onSuccess = {},
-                    onFailure = {}
-                )
-        }
-    }
 
     val state: StateFlow<MedicineState> = combine(
             petsFlow,
@@ -74,17 +70,25 @@ class MedicineViewModel @AssistedInject constructor(
             started = SharingStarted.WhileSubscribed()
         )
 
-    fun onUpdateMedicine(medicine: Medicine) {
+    fun onAddMedicine(medicine: Medicine) {
         viewModelScope.launch {
-            updateMedicine.execute(UpdateMedicine.Params(medicine))
+            addMedicine.execute(AddMedicine.Params(medicine.copy(petId = petId)))
                 .fold(
-                    onSuccess = {},
+                    onSuccess = { _navigationFlow.emit(Unit) },
                     onFailure = {}
                 )
         }
     }
 
-
+    fun onUpdateMedicine(medicine: Medicine) {
+        viewModelScope.launch {
+            updateMedicine.execute(UpdateMedicine.Params(medicine))
+                .fold(
+                    onSuccess = { _navigationFlow.emit(Unit) },
+                    onFailure = {}
+                )
+        }
+    }
 
 }
 
@@ -98,6 +102,7 @@ data class MedicineState(
         type = MedicineType.Vaccine,
         date = null,
         notes = "",
-        repeat = Repeat.Once
+        repeat = Repeat.Once,
+        dose = "",
     )
 )

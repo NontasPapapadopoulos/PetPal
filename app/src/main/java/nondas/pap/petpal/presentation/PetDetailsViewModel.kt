@@ -2,6 +2,9 @@ package nondas.pap.petpal.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -15,19 +18,25 @@ import nondas.pap.petpal.domain.model.Medicine
 import nondas.pap.petpal.domain.model.Pet
 import nondas.pap.petpal.domain.model.enums.Sex
 import nondas.pap.petpal.domain.model.enums.Specie
-import javax.inject.Inject
 
-@HiltViewModel
-class PetDetailsViewModel @Inject constructor(
+
+@HiltViewModel(assistedFactory = PetDetailsViewModel.Factory::class)
+class PetDetailsViewModel @AssistedInject constructor(
     private val getMedicines: GetMedicines,
     private val getPet: GetPet,
+    @Assisted private val petId: String
 ) : ViewModel() {
 
-    private val petFlow = getPet.execute(GetPet.Params(""))
+    @AssistedFactory
+    interface Factory {
+        fun create(petId: String): PetDetailsViewModel
+    }
+
+    private val petFlow = getPet.execute(GetPet.Params(petId))
         .map { it.getOrThrow() }
         .catch {  }
 
-    private val medicinesFlow = getMedicines.execute(GetMedicines.Params(""))
+    private val medicinesFlow = getMedicines.execute(GetMedicines.Params(petId))
         .map { it.getOrThrow() }
         .catch {  }
 
@@ -51,6 +60,6 @@ class PetDetailsViewModel @Inject constructor(
 
 
 data class PetState(
-    val pet: Pet = Pet(name = "", breed = "", birthday = "", sex = Sex.Male, specie = Specie.Dog, weight = "10"),
+    val pet: Pet = Pet(name = "", breed = "", birthday = "", sex = Sex.Male, specie = Specie.Dog, weight = ""),
     val medicines: List<Medicine> = listOf()
 )

@@ -6,6 +6,8 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -32,6 +34,9 @@ class PetViewModel @AssistedInject constructor(
         fun create(id: String): PetViewModel
     }
 
+    private val _navigationFlow = MutableSharedFlow<Unit>()
+    val navigationFlow: SharedFlow<Unit> = _navigationFlow
+
     val state = getPet.execute(GetPet.Params(petId ?: ""))
         .map { it.getOrThrow()}
         .catch {  }
@@ -46,7 +51,7 @@ class PetViewModel @AssistedInject constructor(
         viewModelScope.launch {
             addPet.execute(AddPet.Params(pet))
                 .fold(
-                    onSuccess = {},
+                    onSuccess = { _navigationFlow.emit(Unit) },
                     onFailure = {}
                 )
         }
@@ -56,7 +61,7 @@ class PetViewModel @AssistedInject constructor(
         viewModelScope.launch {
             updatePet.execute(UpdatePet.Params(pet))
                 .fold(
-                    onSuccess = {},
+                    onSuccess = { _navigationFlow.emit(Unit) },
                     onFailure = {}
                 )
         }

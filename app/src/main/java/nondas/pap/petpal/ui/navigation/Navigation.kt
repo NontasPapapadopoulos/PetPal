@@ -47,7 +47,7 @@ fun Navigation() {
                         HomeScreen(
                             navigateToSettings = { backStack.add(Settings) },
                             navigateToAddPet = { backStack.add(Pet(petId = "")) },
-                            navigateToPet = { backStack.add(PetDetails) },
+                            navigateToPet = { backStack.add(PetDetails(petId = it)) },
                             navigateToNotifications = { backStack.add(Notifications) },
                         )
                     }
@@ -79,6 +79,7 @@ fun Navigation() {
                 is PetDetails ->
                     NavEntry(key = route) {
                         PetDetailsScreen(
+                            petId = route.petId,
                             navigateBack = { backStack.removeLastOrNull() },
                             navigateToMedicine = { petId, medicineId -> backStack.add(Medicine(petId, medicineId)) },
                             navigateToEditPet = { backStack.add(Pet(petId = it)) }

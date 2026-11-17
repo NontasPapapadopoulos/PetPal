@@ -39,7 +39,7 @@ fun Badge(
             )
     ) {
         Text(
-            text = text[0].toString().uppercase(),
+            text = if (text.isEmpty()) "E" else text[0].toString().uppercase(),
             fontWeight = FontWeight.ExtraBold,
             style = MaterialTheme.typography.titleLarge,
             color = randomColor.darken(0.6f)

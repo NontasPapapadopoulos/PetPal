@@ -4,7 +4,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import nondas.pap.petpal.domain.FlowUseCase
 import nondas.pap.petpal.domain.executor.IoDispatcher
-import nondas.pap.petpal.domain.interactor.SuspendUseCase
 import nondas.pap.petpal.domain.model.Medicine
 import nondas.pap.petpal.domain.repository.MedicineRepository
 import javax.inject.Inject
