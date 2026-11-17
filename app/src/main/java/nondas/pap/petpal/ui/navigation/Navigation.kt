@@ -4,13 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
-import nondas.pap.petpal.presentation.Mode
-import nondas.pap.petpal.ui.screen.AddPetScreen
+import nondas.pap.petpal.ui.screen.PetScreen
 import nondas.pap.petpal.ui.screen.ForgotPasswordScreen
 import nondas.pap.petpal.ui.screen.HomeScreen
 import nondas.pap.petpal.ui.screen.LoginScreen
 import nondas.pap.petpal.ui.screen.MedicineScreen
-import nondas.pap.petpal.ui.screen.PetScreen
+import nondas.pap.petpal.ui.screen.PetDetailsScreen
 import nondas.pap.petpal.ui.screen.RegisterScreen
 import nondas.pap.petpal.ui.screen.ResetPasswordScreen
 import nondas.pap.petpal.ui.screen.SettingsScreen
@@ -47,8 +46,8 @@ fun Navigation() {
                     NavEntry(key = route) {
                         HomeScreen(
                             navigateToSettings = { backStack.add(Settings) },
-                            navigateToAddPet = { backStack.add(AddPet) },
-                            navigateToPet = { backStack.add(Pet) },
+                            navigateToAddPet = { backStack.add(Pet(petId = "")) },
+                            navigateToPet = { backStack.add(PetDetails) },
                             navigateToNotifications = { backStack.add(Notifications) },
                         )
                     }
@@ -77,25 +76,30 @@ fun Navigation() {
                         )
                     }
 
+                is PetDetails ->
+                    NavEntry(key = route) {
+                        PetDetailsScreen(
+                            navigateBack = { backStack.removeLastOrNull() },
+                            navigateToMedicine = { petId, medicineId -> backStack.add(Medicine(petId, medicineId)) },
+                            navigateToEditPet = { backStack.add(Pet(petId = it)) }
+                        )
+                    }
+
                 is Pet ->
                     NavEntry(key = route) {
                         PetScreen(
                             navigateBack = { backStack.removeLastOrNull() },
-                            navigateToMedicine = { backStack.add(Medicine) },
-                            navigateToEditPet = { backStack.add(AddPet) }
-                        )
-                    }
-
-                is AddPet ->
-                    NavEntry(key = route) {
-                        AddPetScreen(
-                            navigateBack = { backStack.removeLastOrNull() },
+                            petId = route.petId
                         )
                     }
 
                 is Medicine ->
                     NavEntry(key = route) {
-                        MedicineScreen()
+                        MedicineScreen(
+                            navigateBack = { backStack.removeLastOrNull() },
+                            petId = route.petId,
+                            medicineId = route.medicineId
+                        )
                     }
 
                 else -> error("Unknown route: $route")

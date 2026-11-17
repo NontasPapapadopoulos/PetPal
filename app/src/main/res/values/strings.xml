@@ -45,6 +45,7 @@ before choosing a new one.</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="save_pet">Save pet</string>
+    <string name="update_pet">Update pet</string>
     <string name="microchip">Microchip number (optional)</string>
     <string name="vet_clinic">Vet / clinic (optional)</string>
     <string name="sex">Sex</string>

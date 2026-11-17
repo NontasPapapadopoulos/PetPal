@@ -1,11 +1,9 @@
 package nondas.pap.petpal.ui.screen
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,16 +12,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.outlined.Shield
-import androidx.compose.material.icons.outlined.Vaccines
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material.icons.outlined.CameraAlt
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -34,359 +29,394 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.OffsetMapping
+import androidx.compose.ui.text.input.TransformedText
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import nondas.pap.petpal.ui.composable.BackButton
 import nondas.pap.petpal.R
-import nondas.pap.petpal.domain.model.enums.MedicineType
-import nondas.pap.petpal.presentation.PetState
+import nondas.pap.petpal.domain.model.Pet
+import nondas.pap.petpal.domain.model.enums.Sex
+import nondas.pap.petpal.domain.model.enums.Specie
 import nondas.pap.petpal.presentation.PetViewModel
-import nondas.pap.petpal.ui.composable.ChoiceItem
+import nondas.pap.petpal.ui.composable.Field
+import nondas.pap.petpal.ui.composable.FieldLabel
+import nondas.pap.petpal.ui.composable.PrimaryButton
 import nondas.pap.petpal.ui.composable.SelectionRow
 import nondas.pap.petpal.ui.theme.PetPalShapes
 import nondas.pap.petpal.ui.theme.PetPalTheme
 
-
 @Composable
 fun PetScreen(
     navigateBack: () -> Unit,
-    navigateToMedicine: () -> Unit,
-    navigateToEditPet: () -> Unit,
-    viewModel: PetViewModel = hiltViewModel()
+    petId: String,
+    viewModel: PetViewModel = hiltViewModel<PetViewModel, PetViewModel.Factory>(
+        creationCallback = { factory -> factory.create(id = petId) }
+    )
 ) {
 
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-
     PetContent(
         content = state,
         onBackClicked = navigateBack,
-        onEditClicked = navigateToEditPet,
-        onAddMedicineClicked = navigateToMedicine
+        onSavePetClicked = { viewModel.onAddPet(it) },
+        onUpdatePetClicked = { viewModel.onUpdate(it) }
     )
+
 }
 
 
 @Composable
 private fun PetContent(
-    content: PetState,
+    content: Pet,
     onBackClicked: () -> Unit,
-    onEditClicked: () -> Unit,
-    onAddMedicineClicked: () -> Unit
+    onSavePetClicked: (Pet) -> Unit,
+    onUpdatePetClicked: (Pet) -> Unit
 ) {
-    Scaffold(
-        floatingActionButton = {
-            Button(
-                onClick = onAddMedicineClicked,
-                colors = ButtonDefaults.buttonColors().copy(
-                    containerColor = MaterialTheme.colorScheme.secondary
-                ),
-                modifier = Modifier.height(height = 56.dp),
-                shape = PetPalShapes.large
+
+    var name by remember { mutableStateOf(content.name) }
+    var specie by remember { mutableStateOf(content.specie) }
+    var breed by remember { mutableStateOf(content.breed) }
+    var birthday by remember { mutableStateOf(content.birthday) }
+    var weight by remember { mutableStateOf(content.weight) }
+    var sex by remember { mutableStateOf(content.sex) }
+    var microChip by remember { mutableStateOf(content.microchipNumber) }
+
+
+    Scaffold {
+        Column(
+            modifier = Modifier
+                .padding(it)
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
             ) {
+                BackButton(onClick = onBackClicked)
 
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSecondary
-
-                )
-
-                Spacer(modifier = Modifier.width(8.dp))
+                Spacer(modifier = Modifier.width(16.dp))
 
                 Text(
-                    text = stringResource(R.string.add_medicine),
-                    color = MaterialTheme.colorScheme.onSecondary
+                    text = stringResource(R.string.add_pet),
+                    style = MaterialTheme.typography.titleLarge
                 )
             }
-        },
-    ) {
 
-        var selectedTab by remember { mutableStateOf(MedicineTab.Upcoming) }
-        var selectedMedicine by remember { mutableStateOf(MedicineChoice.All) }
+            Spacer(modifier = Modifier.height(12.dp))
 
-        Column(
-            modifier = Modifier.padding(it)
-                .padding(top = 24.dp)
 
-        ) {
-
-            Column(
-                modifier = Modifier.padding(
-                    horizontal = 24.dp
-                )
+            IconButton(
+                onClick = {},
+                modifier = Modifier.size(120.dp)
+                    .border(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        shape = PetPalShapes.extraLarge
+                    )
+                    .background(
+                        color = MaterialTheme.colorScheme.surfaceContainerLowest,
+                        shape = PetPalShapes.extraLarge
+                    ),
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+//                AsyncImage(
+//                    model = pet.photoUrl,
+//                    contentDescription = pet.name
+//                )
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    BackButton { onBackClicked() }
+                    Icon(
+                        imageVector = Icons.Outlined.CameraAlt,
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                        contentDescription = null
+                    )
 
-                    Button(
-                        onClick = onEditClicked,
-                        colors = ButtonDefaults.buttonColors().copy(
-                            containerColor = MaterialTheme.colorScheme.outlineVariant
-                        ),
-                        shape = PetPalShapes.medium,
-                        modifier = Modifier.height(48.dp)
-                    ) {
-                        Text(
-                            text = stringResource(R.string.edit_pet),
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    Text(
+                        text = stringResource(R.string.add_photo),
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+
                 }
-
-                PetDetails(
-                    name = content.pet.name,
-                    sex = content.pet.sex.name,
-                    breed = content.pet.breed,
-                    age = content.pet.getAge(),
-                    weight = content.pet.weight,
-                    chipNumber = content.pet.microchipNumber
-                )
             }
-
-
-            SelectionRow(
-                firstOption = MedicineTab.Upcoming,
-                secondOption = MedicineTab.History,
-                modifier = Modifier.padding(horizontal = 24.dp),
-                selected = selectedTab,
-                onFirstSelected = { selectedTab = MedicineTab.Upcoming},
-                onSecondSelected = { selectedTab = MedicineTab.History }
-            )
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            HorizontalDivider(
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.22f),
-                thickness = 2.dp
+
+            FieldLabel(
+                text = stringResource(R.string.name)
             )
 
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(color = MaterialTheme.colorScheme.surfaceVariant)
-                    .padding(start = 24.dp, end = 24.dp, top = 24.dp )
-            ) {
 
-                FlowRow {
-                    MedicineChoice.entries.forEach {
-                        ChoiceItem(
-                            choice = it,
-                            selectedChoice = selectedMedicine,
-                            onClick = { selectedMedicine = it }
+            Field(
+                value = name,
+                onValueChange = { name = it },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = "Roza"
+            )
 
+            Spacer(modifier = Modifier.height(12.dp))
+
+
+            FieldLabel(
+                text = stringResource(R.string.species),
+            )
+
+            Row {
+                SpecieItem(
+                    specie = Specie.Dog,
+                    selectedSpecie = specie,
+                    modifier = Modifier.weight(1f),
+                    onClick = { specie = it }
+                )
+
+                SpecieItem(
+                    specie = Specie.Cat,
+                    selectedSpecie = specie,
+                    modifier = Modifier.weight(1f),
+                    onClick = { specie = it }
+                )
+
+                SpecieItem(
+                    specie = Specie.Bird,
+                    selectedSpecie = specie,
+                    modifier = Modifier.weight(1f),
+                    onClick = { specie = it }
+                )
+
+                SpecieItem(
+                    specie = Specie.Other,
+                    selectedSpecie = specie,
+                    modifier = Modifier.weight(1f),
+                    onClick = { specie = it }
+                )
+
+
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+
+            FieldLabel(
+                text = stringResource(R.string.breed),
+            )
+
+
+            Field(
+                value = breed,
+                onValueChange = { breed = it },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = "Frenchton"
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Row {
+
+                Column(modifier = Modifier.weight(1f)) {
+
+                    FieldLabel(
+                        text = stringResource(R.string.birth_date)
+                    )
+
+                    Field(
+                        value = birthday,
+                        onValueChange = {
+                            if (it.length <= 8 && it.all { c -> c.isDigit() })
+                                birthday = it
+                        },
+                        placeholder = "DD / MM / YYYY",
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number
+                        ),
+                        visualTransformation = DateVisualTransformation,
                         )
-                    }
                 }
 
+                Spacer(modifier = Modifier.width(8.dp))
 
-                MedicineItem(
-                    imageVector = Icons.Outlined.Vaccines,
-                    description = "Rabies booster",
-                    type = "Vaccine",
-                    date = "Nov 5",
-                    frequency = "yearly",
-                    daysLeft = "In 3 days",
-                )
-
-                MedicineItem(
-                    imageVector = Icons.Outlined.Shield,
-                    description = "Flea & tick spot-on",
-                    type = "Treatment",
-                    date = "Dec 14",
-                    frequency = "monthly",
-                    daysLeft = "29 days",
-                )
+                Column(modifier = Modifier.weight(1f)) {
+                    FieldLabel(
+                        text = stringResource(R.string.weight),
+                    )
 
 
-                MedicineItem(
-                    painter = painterResource(R.drawable.outline_pill_24),
-                    description = "Flea & tick spot-on",
-                    type = "Treatment",
-                    date = "Dec 14",
-                    frequency = "monthly",
-                    daysLeft = "29 days",
-                )
-            }
-
-        }
-    }
-}
-
-
-@Composable
-private fun PetDetails(
-    name: String,
-    sex: String,
-    breed: String,
-    age: String,
-    weight: String,
-    chipNumber: String
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(vertical = 24.dp, horizontal = 8.dp)
-    ) {
-
-        Text(
-            text = name[0].toString().capitalize()
-        )
-
-        Spacer(modifier = Modifier.width(16.dp))
-
-        Column {
-            Text(
-                text = name
-            )
-
-            Text(
-                text = "$breed · $sex · $age y"
-            )
-
-            Text(
-                text = "$weight kg · Chip [$chipNumber]"
-            )
-        }
-
-
-    }
-}
-
-enum class MedicineChoice {
-    All,
-    Vaccine,
-    Pill,
-    Treatment,
-    Other
-}
-
-
-@Composable
-private fun MedicineItem(
-    imageVector: ImageVector? = null,
-    painter: Painter? = null,
-    description: String,
-    type: String,
-    date: String,
-    frequency: String,
-    daysLeft: String
-) {
-
-
-    val colors = listOf(
-        MaterialTheme.colorScheme.primaryContainer to MaterialTheme.colorScheme.onPrimaryContainer,
-        MaterialTheme.colorScheme.secondaryContainer to MaterialTheme.colorScheme.onSecondaryContainer
-    )
-
-    val color = remember { colors.random() }
-
-    Card(
-        modifier = Modifier.fillMaxWidth()
-            .padding(vertical = 8.dp),
-        shape = PetPalShapes.large,
-        colors = CardDefaults.cardColors().copy(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
-        ),
-        border = BorderStroke(
-            width = 1.dp,
-            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f)
-        )
-    ) {
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Box(
-                modifier = Modifier.size(50.dp)
-                    .background(
-                        color = color.first,
-                        shape = PetPalShapes.large
-                    ),
-                contentAlignment = Alignment.Center,
-            ) {
-
-                imageVector?.let {
-                    Icon(
-                        imageVector = it,
-                        contentDescription = null,
-                        tint = color.second,
+                    Field(
+                        value = weight,
+                        onValueChange = { weight = it },
+                        placeholder = "10 kg",
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number
+                        ),
                     )
                 }
 
-                painter?.let {
-                    Icon(
-                        painter = it,
-                        contentDescription = null,
-                        tint = color.second,
-                    )
-                }
             }
 
-            Spacer(modifier = Modifier.width(12.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
 
-            Column {
-                Text(
-                    text = description,
-                    style = MaterialTheme.typography.bodyMedium,
+            FieldLabel(
+                text = "Sex"
+            )
 
-                    )
 
-                Text(
-                    text ="$type · $date · $frequency",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
+            SelectionRow(
+                firstOption = Sex.Male,
+                secondOption = Sex.Female,
+                selected = sex,
+                onFirstSelected = { sex = Sex.Male },
+                onSecondSelected = { sex = Sex.Female }
+            )
+
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+
+            FieldLabel(
+                text = stringResource(R.string.microchip),
+            )
+
+
+            Field(
+                value = microChip,
+                onValueChange = { microChip = it },
+                placeholder = "15 Digits",
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number
+                ),
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
 
             Spacer(modifier = Modifier.weight(1f))
 
 
-            Text(
-                text = daysLeft,
-                color = MaterialTheme.colorScheme.primary,
-                style = MaterialTheme.typography.labelSmall,
-                modifier = Modifier
-                    .background(
-                        color = MaterialTheme.colorScheme.primaryContainer,
-                        shape = PetPalShapes.extraSmall
+            PrimaryButton(
+                onClick = {
+                    val pet = Pet(
+                        name = name,
+                        birthday = birthday,
+                        sex = sex,
+                        specie = specie,
+                        breed = breed,
+                        microchipNumber = microChip,
+                        weight = weight
                     )
-                    .padding(vertical = 8.dp, horizontal = 12.dp)
 
-
+                    if (content.id.isEmpty())
+                        onSavePetClicked(pet)
+                    else
+                        onUpdatePetClicked(pet)
+                },
+                text = if (content.id.isEmpty()) stringResource(R.string.save_pet)
+                else stringResource(R.string.update_pet)
             )
-        }
 
+        }
+    }
+
+}
+
+
+@Composable
+private fun SpecieItem(
+    specie: Specie,
+    selectedSpecie: Specie,
+    modifier: Modifier = Modifier,
+    onClick: (Specie) -> Unit
+) {
+
+    val isSelected = specie == selectedSpecie
+
+    val textColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
+    val borderColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f)
+    val backgroundColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerLowest
+    Text(
+        text = specie.name,
+        color = textColor,
+        textAlign = TextAlign.Center,
+        modifier = modifier
+            .clickable { onClick(specie) }
+            .padding(horizontal = 4.dp)
+            .background(
+                color = backgroundColor,
+                shape = PetPalShapes.medium
+            )
+            .border(
+                width = 1.dp,
+                color = borderColor,
+                shape = PetPalShapes.medium
+            )
+            .padding(horizontal = 16.dp, vertical = 12.dp)
+
+    )
+
+}
+
+@Composable
+@Preview
+private fun PetContentPreview() {
+    PetPalTheme(darkTheme = false) {
+        PetContent(
+        content = Pet(
+            id = "",
+            ownerId = "",
+            name = "",
+            birthday = "",
+            weight = "",
+            sex = Sex.Male,
+            specie = Specie.Dog,
+            breed = "",
+            microchipNumber = "",
+            photoUrl = ""
+        ),
+        onSavePetClicked = {},
+        onUpdatePetClicked = {},
+        onBackClicked = {}
+        )
     }
 }
 
-enum class MedicineTab {
-    Upcoming,
-    History
-}
 
-
-@Preview
-@Composable
-private fun PetContentContent() {
-    PetPalTheme {
-        PetContent(
-            content = PetState(),
-            onBackClicked = {},
-            onEditClicked = {},
-            onAddMedicineClicked = {}
+object DateVisualTransformation : VisualTransformation {
+    override fun filter(text: AnnotatedString): TransformedText {
+        val trimmed = text.text.take(8)
+        var output = ""
+        for (i in trimmed.indices) {
+            output += trimmed[i]
+            if (i == 1 || i == 3) output += " / "
+        }
+        return TransformedText(
+            AnnotatedString(output),
+            object : OffsetMapping {
+                override fun originalToTransformed(offset: Int): Int =
+                    when {
+                        offset <= 2 -> offset
+                        offset <= 4 -> offset + 3
+                        else -> offset + 6
+                    }
+                override fun transformedToOriginal(offset: Int): Int =
+                    when {
+                        offset <= 2 -> offset
+                        offset <= 5 -> offset - 3
+                        else -> offset - 6
+                    }
+            }
         )
     }
 }

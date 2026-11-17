@@ -2,6 +2,7 @@ package nondas.pap.petpal.ui.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -34,10 +35,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import nondas.pap.petpal.ui.composable.BackButton
 import nondas.pap.petpal.R
+import nondas.pap.petpal.domain.model.Medicine
 import nondas.pap.petpal.domain.model.enums.MedicineType
 import nondas.pap.petpal.domain.model.enums.Repeat
+import nondas.pap.petpal.presentation.MedicineState
+import nondas.pap.petpal.presentation.MedicineViewModel
 import nondas.pap.petpal.ui.composable.Badge
 import nondas.pap.petpal.ui.composable.ChoiceItem
 import nondas.pap.petpal.ui.composable.Field
@@ -49,13 +55,35 @@ import nondas.pap.petpal.ui.theme.PetPalTheme
 
 
 @Composable
-fun MedicineScreen() {
+fun MedicineScreen(
+    navigateBack: () -> Unit,
+    medicineId: String,
+    petId: String,
+    viewModel: MedicineViewModel = hiltViewModel<MedicineViewModel, MedicineViewModel.Factory>(
+        creationCallback = { factory -> factory.create(petId = petId, medicineId = medicineId) }
+    )
+) {
+
+
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    MedicineContent(
+        content = state,
+        onBackClicked = navigateBack,
+        onSaveMedicine = { viewModel.onAddMedicine(it) },
+        onUpdateMedicine = { viewModel.onUpdateMedicine(it) }
+    )
 
 }
 
 
 @Composable
-private fun MedicineContent() {
+private fun MedicineContent(
+    content: MedicineState,
+    onBackClicked: () -> Unit,
+    onSaveMedicine: (Medicine) -> Unit,
+    onUpdateMedicine: (Medicine) -> Unit,
+) {
 
     Scaffold {
         Column(
@@ -65,16 +93,16 @@ private fun MedicineContent() {
                 .verticalScroll(rememberScrollState())
 
         ) {
-
+            var selectedPetId by remember { mutableStateOf("") }
             var selectedRepeat by remember { mutableStateOf(Repeat.Once) }
-            var selectedTab by remember { mutableStateOf(Tab.ScheduleReminder) }
+//            var selectedTab by remember { mutableStateOf(Tab.ScheduleReminder) }
             var selectedMedicine by remember { mutableStateOf(MedicineType.Vaccine) }
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                BackButton {  }
+                BackButton { onBackClicked() }
 
                 Spacer(modifier = Modifier.width(16.dp))
 
@@ -86,29 +114,35 @@ private fun MedicineContent() {
 
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+//            Spacer(modifier = Modifier.height(24.dp))
 
-            SelectionRow(
-                firstOption = Tab.ScheduleReminder,
-                secondOption = Tab.LogPastDose,
-                selected = selectedTab,
-                onFirstSelected = { selectedTab = Tab.ScheduleReminder },
-                onSecondSelected = { selectedTab = Tab.LogPastDose }
-            )
+//            SelectionRow(
+//                firstOption = Tab.ScheduleReminder,
+//                secondOption = Tab.LogPastDose,
+//                selected = selectedTab,
+//                onFirstSelected = { selectedTab = Tab.ScheduleReminder },
+//                onSecondSelected = { selectedTab = Tab.LogPastDose }
+//            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
 
             FieldLabel(text = stringResource(R.string.forr))
 
-            FlowRow(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                PetItem("Roza", true)
-                PetItem("Pepe", false)
-                PetItem("Luna", false)
-            }
+            if (content.pets.isNotEmpty())
+                FlowRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    content.pets.forEach {
+                        PetItem(
+                            name = it.name,
+                            isSelected = it.id == selectedPetId,
+                            onClick = { selectedPetId = it.id }
+                        )
+                    }
+
+                }
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -215,7 +249,8 @@ private fun MedicineContent() {
 
             PrimaryButton(
                 onClick = {},
-                text = stringResource(R.string.save_reminder)
+                text = stringResource(R.string.save_reminder),
+                modifier = Modifier.padding(top = 24.dp)
             )
 
         }
@@ -229,7 +264,8 @@ private fun MedicineContent() {
 @Composable
 private fun PetItem(
     name: String,
-    isSelected: Boolean
+    isSelected: Boolean,
+    onClick: () -> Unit
 ) {
     val borderWidth = if (isSelected) 2.dp else 1.dp
     val borderColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f)
@@ -239,6 +275,7 @@ private fun PetItem(
 
     Row(
         modifier = Modifier
+            .clickable { onClick() }
             .border(width = borderWidth, color = borderColor, shape = PetPalShapes.medium)
             .background(color = backgroundColor, shape = PetPalShapes.medium)
             .padding(8.dp),
@@ -403,7 +440,12 @@ private fun NotificationSettingsContainerPreview() {
 @Preview
 private fun MedicineContentPreview() {
     PetPalTheme {
-        MedicineContent()
+        MedicineContent(
+            onSaveMedicine = {},
+            onBackClicked = {},
+            onUpdateMedicine = {},
+            content = MedicineState()
+        )
     }
 }
 

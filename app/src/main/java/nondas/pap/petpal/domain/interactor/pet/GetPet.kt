@@ -2,6 +2,7 @@ package nondas.pap.petpal.domain.interactor.pet
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import nondas.pap.petpal.domain.FlowUseCase
 import nondas.pap.petpal.domain.executor.IoDispatcher
 import nondas.pap.petpal.domain.model.Pet
@@ -14,6 +15,8 @@ class GetPet @Inject constructor(
 ): FlowUseCase<Pet, GetPet.Params>(dispatcher) {
 
     override fun invoke(params: Params): Flow<Pet> {
+        if (params.id.isEmpty())
+            return flowOf()
         return petRepository.get(params.id)
     }
 

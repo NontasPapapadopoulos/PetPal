@@ -37,12 +37,17 @@ object ChangePassword: NavKey
 
 
 @Serializable
-object Pet: NavKey
+object PetDetails: NavKey
 
 
 @Serializable
-object AddPet: NavKey
+data class Pet(
+    val petId: String = ""
+): NavKey
 
 
 @Serializable
-object Medicine: NavKey
+data class Medicine(
+    val petId: String,
+    val medicineId: String
+): NavKey

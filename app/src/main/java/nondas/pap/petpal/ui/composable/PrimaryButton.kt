@@ -15,11 +15,12 @@ import nondas.pap.petpal.ui.theme.PetPalShapes
 fun PrimaryButton(
     onClick: () -> Unit,
     text: String,
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    modifier: Modifier = Modifier
 ) {
     Button(
         onClick = onClick,
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
             .height(height = 54.dp),
         shape = PetPalShapes.medium,
         enabled = enabled

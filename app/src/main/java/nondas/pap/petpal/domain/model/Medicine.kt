@@ -11,7 +11,7 @@ data class Medicine(
     val petId: String,
     val name: String,
     val type: MedicineType,
-    val date: Timestamp,
+    val date: Timestamp?,
     val notes: String,
     val repeat: Repeat
 
